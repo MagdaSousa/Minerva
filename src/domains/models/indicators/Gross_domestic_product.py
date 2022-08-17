@@ -26,24 +26,20 @@ class GrossDomesticProduct(Base):
         if not value.replace(" ", ""):
             raise ValueError('field value cannot be null')
 
-
     @validator('reference_year')
-    def field_reference_year_cannot_be_null(cls, v):
-        if ' ' not in v:
+    def field_reference_year_cannot_be_null(cls, reference_year):
+        if not reference_year.replace(" ", ""):
             raise ValueError('field reference year cannot be null')
-        return v.title()
 
     @validator('growth_average')
-    def field_growth_average_cannot_be_null(cls, v):
-        if ' ' not in v:
+    def field_growth_average_cannot_be_null(cls, growth_average):
+        if not growth_average.replace(" ", ""):
             raise ValueError('field growth average cannot be null')
-        return v.title()
 
     @validator('growth_rate')
-    def field_growth_rate_cannot_be_null(cls, v):
-        if ' ' not in v:
+    def field_growth_rate_cannot_be_null(cls, growth_rate):
+        if not growth_rate.replace(" ", ""):
             raise ValueError('field growth rate cannot be null')
-        return v.title()
 
     def __repr__(self):
         return f" GrossDomesticProduct(GrossDomesticProductID={self.GrossDomesticProductID!r}, " \

@@ -1,5 +1,6 @@
 from src.common.Enums import TablesNames
 from src.domains import Base, Column, Integer, String, relationship
+from pydantic import validator
 
 
 class Region(Base):
@@ -10,6 +11,11 @@ class Region(Base):
 
     country = relationship(
         "´Country", back_populates="region", cascade="all, delete-orphan")
+
+    @validator('region_name')
+    def field_country_name_cannot_be_null(cls, region_name):
+        if not region_name.replace(" ", ""):
+            raise ValueError('field country_name cannot be null')
 
     def __repr__(self):
         return f"GrossDomesticProduct(id={self.id!r}, " \
