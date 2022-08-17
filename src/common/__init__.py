@@ -1,0 +1,4 @@
+teste =" "
+
+
+print(teste.replace(" ", ""))
