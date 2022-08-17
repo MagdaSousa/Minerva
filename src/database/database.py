@@ -1,6 +1,8 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.declarative import declarative_base
 import os
+Base = declarative_base()
 
 DB_USER = os.getenv('user')
 DB_PASSWORD = os.getenv('password')
