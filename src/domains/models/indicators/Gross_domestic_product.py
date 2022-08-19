@@ -6,7 +6,7 @@ from src.domains import Column, Integer, String, relationship, ForeignKey, Float
 class GrossDomesticProduct(Base):
     __tablename__ = TablesNames.gross_domestic_product.value
 
-    GrossDomesticProductID = Column(Integer, primary_key=True)
+    GDPGrowthAnnualID = Column(Integer, primary_key=True)
     value = Column(Float(), nullable=False)
     growth_average = Column(Float(), nullable=False)
     growth_rate = Column(Float(), nullable=False)

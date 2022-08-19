@@ -7,6 +7,21 @@ class GDPRepository:
     """
     GDP -Gross Domestic Product
     """
+
+    @staticmethod
+    def find_by_code(db: Session, code: int) -> GrossDomesticProduct:
+        try:
+            return db.query(GrossDomesticProduct).filter(GrossDomesticProduct.GDPGrowthAnnualID == id).first()
+        except Exception as err:
+            raise logger.error(f"[GrossDomesticProductRepository].[find_by_id]- ERROR- {err} ")
+
+    @staticmethod
+    def find_by_id(db: Session, id: int) -> GrossDomesticProduct:
+        try:
+            return db.query(GrossDomesticProduct).filter(GrossDomesticProduct.GrossDomesticProductID == id).first()
+        except Exception as err:
+            raise logger.error(f"[GrossDomesticProductRepository].[find_by_id]- ERROR- {err} ")
+
     @staticmethod
     def find_all(db: Session) -> list[GrossDomesticProduct]:
         try:
@@ -28,22 +43,9 @@ class GDPRepository:
         except Exception as err:
             raise logger.error(f"[GrossDomesticProductRepository].[save]- ERROR- {err} ")
 
-    @staticmethod
-    def find_by_id(db: Session, id: int) -> GrossDomesticProduct:
-        try:
-            return db.query(GrossDomesticProduct).filter(GrossDomesticProduct.GrossDomesticProductID == id).first()
-        except Exception as err:
-            raise logger.error(f"[GrossDomesticProductRepository].[find_by_id]- ERROR- {err} ")
 
     @staticmethod
-    def find_by_GrossDomesticProduct_code(db: Session, id: int) -> GrossDomesticProduct:
-        try:
-            return db.query(GrossDomesticProduct).filter(GrossDomesticProduct.GrossDomesticProductID == id).first()
-        except Exception as err:
-            raise logger.error(f"[GrossDomesticProductRepository].[find_by_id]- ERROR- {err} ")
-
-    @staticmethod
-    def exists_by_id(db: Session, id: int) -> bool:
+    def exists_by_code(db: Session, id: int) -> bool:
         try:
             return db.query(GrossDomesticProduct).filter(GrossDomesticProduct.GrossDomesticProductID == id).first() is not None
 
