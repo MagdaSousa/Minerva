@@ -1,27 +1,27 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
-import os
+
+from src.database.settings import DBSettings
+
 Base = declarative_base()
-
-DB_USER = os.getenv('user')
-DB_PASSWORD = os.getenv('password')
-DB_HOST = os.getenv('host')
-DB_PORT = os.getenv('port')
-DB_DATABASE_NAME = os.getenv('database')
-
-SQLALCHEMY_DATABASE_URL = "mysql+pymysql://{0}:{1}@{2}:{3}/{4}".format(
-    DB_USER, DB_PASSWORD, DB_HOST, DB_PORT, DB_DATABASE_NAME
-)
 
 
 class DatabaseConnection:
     def __init__(self):
+        self.settings = DBSettings()
+        self.database_url = "mysql+pymysql://{0}:{1}@{2}:{3}/{4}".format(
+            self.settings.db_user,
+            self.settings.db_password,
+            self.settings.db_host,
+            self.settings.db_port,
+            self.settings.db_database_name
+        )
         self.engine = self.establishing_connection()
         self.sessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=self.engine)
 
     def establishing_connection(self):
-        return create_engine(url=SQLALCHEMY_DATABASE_URL)
+        return create_engine(url=self.database_url)
 
     def get_db(self):
         db = self.sessionLocal()
