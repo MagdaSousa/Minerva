@@ -121,3 +121,47 @@ class ExtractAndTransformDataSet:
         return df_merge
 
 
+
+class IngestionInPostgres:
+    def __init__(self,df_merge):
+        self.df_merge =df_merge
+
+    def iterate_in_rows_to_ingestion(self):
+        for index, row in self.df_merge.iterrows():
+            row["IncomeGroup"]
+            row["Country Code"]
+            row["Region"]
+
+
+    def ingestion_country_table_bach(self,**kwargs):
+
+         country = Country(
+             countryID=,
+             country_name= ,
+             country_code=,
+             region_id=  )
+
+    def ingestion_region_table_bach(self,**kwargs):
+        region = Region(
+               id={},
+               regionID={},
+               region_name={})
+
+
+    def ingestion_gdp_table_bach(self,**kwargs):
+         GrossDomesticProduct(
+             GrossDomesticProductID={},
+             value={},
+             growth_average={},
+             growth_rate={},
+             reference_year={},
+             gdp_external_id={},
+             country_id={},
+             indicator_id={})
+
+    def ingestion_indicator_table_bach(self,**kwargs):
+        indicator =Indicator(
+            indicatorID={},
+         indicator_name={},
+         indicator_code={})
+

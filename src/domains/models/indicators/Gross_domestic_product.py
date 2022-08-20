@@ -7,21 +7,22 @@ class GrossDomesticProduct(Base):
     __tablename__ = TablesNames.gross_domestic_product.value
 
     GDPGrowthAnnualID = Column(Integer, primary_key=True)
-    value = Column(Float(), nullable=False)
-    growth_average = Column(Float(), nullable=False)
-    growth_rate = Column(Float(), nullable=False)
+    ValueperPeriod = Column(Float(), nullable=False)
     reference_year = Column(DATE(), nullable=False)
     gdp_external_id = Column(String(100), nullable=False)
 
-    country_id = Column(Integer, ForeignKey("country.id"), nullable=False)
-    indicator_id = Column(Integer, ForeignKey("indicator.id"), nullable=False)
+    country_id = Column(Integer, ForeignKey("CountryIndicators.CountryID"), nullable=False)
+    indicator_id = Column(Integer, ForeignKey("PeriodIndicators.IndicatorID"), nullable=False)
+    period_id = Column(Integer, ForeignKey("PeriodIndicators.PeriodID"), nullable=False)
 
     period = relationship(
-        "period", back_populates="gdp", cascade="all, delete-orphan")
+        "PeriodIndicators", back_populates="GrossDomesticProduct", cascade="all, delete-orphan")
     indicator = relationship(
-        "indicator", back_populates="gdp", cascade="all, delete-orphan")
+        "PeriodIndicators", back_populates="GrossDomesticProduct", cascade="all, delete-orphan")
+    country = relationship(
+        "CountryIndicators", back_populates="GrossDomesticProduct", cascade="all, delete-orphan")
 
-    @validator('value')
+    @validator('ValueperPeriod')
     def field_value_cannot_be_null(cls, value):
         if not value.replace(" ", ""):
             raise ValueError('field value cannot be null')
@@ -43,10 +44,9 @@ class GrossDomesticProduct(Base):
 
     def __repr__(self):
         return f" GrossDomesticProduct(GrossDomesticProductID={self.GrossDomesticProductID!r}, " \
-               f" value={self.value!r}," \
-               f" growth_average={self.growth_average!r}," \
-               f" growth_rate={self.growth_rate!r}," \
+               f" ValueperPeriod={self.ValueperPeriod!r}," \
                f" reference_year={self.reference_year!r}," \
                f" gdp_external_id={self.gdp_external_id!r}," \
                f" country_id={self.country_id!r}," \
+               f" period_id={self.period_id!r}," \
                f" indicator_id={self.indicator_id!r})"
