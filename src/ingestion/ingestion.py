@@ -121,3 +121,103 @@ class ExtractAndTransformDataSet:
         return df_merge
 
 
+
+class IngestionInPostgres:
+    def __init__(self,df_merge):
+        self.df_merge =df_merge
+
+    def iterate_in_rows_to_ingestion(self):
+        for index, row in self.df_merge.iterrows():
+            row["IncomeGroup"]
+            row["Country Code"]
+            row["Region"]
+
+
+    def ingestion_country_table_bach(self,**kwargs):
+
+         country = Country(
+             countryID=,
+             country_name= ,
+             country_code=,
+             region_id=  )
+
+    def ingestion_region_table_bach(self,**kwargs):
+        region = Region(
+               id={},
+               regionID={},
+               region_name={})
+
+
+    def ingestion_gdp_table_bach(self,**kwargs):
+         GrossDomesticProduct(
+             GrossDomesticProductID={},
+             value={},
+             growth_average={},
+             growth_rate={},
+             reference_year={},
+             gdp_external_id={},
+             country_id={},
+             indicator_id={})
+
+    def ingestion_indicator_table_bach(self,**kwargs):
+        indicator =Indicator(
+            indicatorID={},
+         indicator_name={},
+         indicator_code={})
+#
+# file_indicator = 'https://gist.githubusercontent.com/MagdaSousa/da6d007edfdf38019b0de219c4d18ad6/raw' \
+#                  '/a5f33797ec661a77d3587352f699dbb97b3487d8/API_NY_GDP_MKT_KD_ZG_DS2_en_csv_v2_4344066.csv '
+# df_indicator = pd.read_csv(file_indicator)
+# print(df_indicator.columns)
+#
+# file_region = 'https://gist.githubusercontent.com/MagdaSousa/46c3139e06d45f22b28b9f0c1a9d1df2/raw' \
+#               '/98c2030cea6d5a66fdda1f2f86467999b73f7b93/Metadata_Country_API_NY_GDP_MKTP_KD_ZG_DS2_en_csv_v2_4344066.csv '
+# df_region = pd.read_csv(file_region)
+# print(df_region.columns)
+# # df_indicator.join(df_region, on='Country Code', how='inner')
+#
+#
+# print(df_region.shape)
+# print(df_indicator.shape)
+# df_region.rename(columns={'TableName': 'Country Name'}, inplace=True)
+#
+# outer_merged = pd.merge(
+#     df_indicator, df_region, how="left", on=["Country Code", "Country Name"])
+# print(outer_merged.shape)
+# outer_merged.to_csv("banana.csv")
+# class IngestionBatch:
+#     def __init__(self, nome, cor):
+#        pass
+#     def activate_process_batch_ingestion(self):
+#         pass
+#
+#     def ingestion_country_table_bach(self):
+#
+#          country = Country(
+#              countryID=,
+#              country_name= ,
+#              country_code=,
+#              region_id=  )
+#
+#     def ingestion_country_table_bach(self):
+#         region = Region(
+#                id={},
+#                regionID={},
+#                region_name={})
+#
+#
+# class GDPIngestionBatch:
+#     """
+#     GDP -Gross Domestic Product ingestion
+#     """
+#
+#
+#     @staticmethod
+#     def ingestion_gross_domestic_product(db: Session, gdp_data) -> GDPRepository:
+#         try:
+#             verify_period(intial_period, final_period)
+#             gdp = GDPRepository.find_gdp_by_region_name(db, intial_period, final_period)
+#
+#             return gdp
+#         except Exception as err:
+#             raise logger.error(f"[GDPAction].[find_by_region_name]- ERROR- {err} ")
