@@ -1,8 +1,7 @@
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy.ext.declarative import declarative_base
-
 from src.database.settings import DBSettings
+from sqlalchemy import create_engine, Column, ForeignKey, String, Integer, Float, DATE, Table
 
 Base = declarative_base()
 

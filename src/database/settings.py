@@ -8,6 +8,3 @@ class DBSettings:
         self.db_host = os.getenv('host')
         self.db_port = os.getenv('port')
         self.db_database_name = os.getenv('database')
-
-
-
