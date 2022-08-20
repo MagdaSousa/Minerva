@@ -55,3 +55,7 @@ class GDPAction:
             return gdp
         except Exception as err:
             raise logger.error(f"[GDPAction].[find_by_region_name]- ERROR- {err} ")
+
+
+
+

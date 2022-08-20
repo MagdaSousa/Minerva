@@ -1,3 +1,5 @@
+import pandas as pd
+
 def calculate_growth_rate(gdp):
     """calcular taxa de crescimento"""
     pass
@@ -10,3 +12,4 @@ def verify_period(intial_period: int, final_period: int):
         raise ValueError('field country_code cannot be null')
     else:
         return None
+
