@@ -9,7 +9,8 @@ class Indicator(Base):
     indicatorID = Column(Integer, primary_key=True)
     indicator_name = Column(String(50), nullable=False)
     indicator_code = Column(String(50), nullable=False)
-    gdp = relationship("GrossDomesticProduct", back_populates="indicator")
+    period_indicator = relationship("PeriodIndicators", back_populates="IndicatorID")
+    country_indicator = relationship("PeriodIndicators", back_populates="IndicatorID")
 
     @validator('indicator_name')
     def field_country_name_cannot_be_null(cls, indicator_name):

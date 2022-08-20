@@ -9,7 +9,6 @@ class Period(Base):
     PeriodID = Column(Integer, primary_key=True)
     ResearchYear = Column(String(50), nullable=False)
 
-
     @validator('PeriodID')
     def field_country_name_cannot_be_null(cls, country_name):
         if not country_name.replace(" ", ""):
@@ -22,4 +21,3 @@ class Period(Base):
 
     def __repr__(self):
         return f"Period(PeriodID={self.countryID!r},  ResearchYear={self.ResearchYear!r})"
-
