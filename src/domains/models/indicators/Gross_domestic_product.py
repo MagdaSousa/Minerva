@@ -1,6 +1,6 @@
 from src.common.Enums import TablesNames
 from pydantic import validator
-from src.domains import Column, Integer, String, relationship, ForeignKey, Float, DATE, Base
+from src.database.database import Base, Column, Integer, ForeignKey, Float, DATE
 
 
 class GrossDomesticProduct(Base):
@@ -9,18 +9,10 @@ class GrossDomesticProduct(Base):
     GDPGrowthAnnualID = Column(Integer, primary_key=True)
     ValueperPeriod = Column(Float(), nullable=False)
     reference_year = Column(DATE(), nullable=False)
-    gdp_external_id = Column(String(100), nullable=False)
+    # gdp_external_id = Column(String(100), nullable=False)
 
-    country_id = Column(Integer, ForeignKey("CountryIndicators.CountryID"), nullable=False)
-    indicator_id = Column(Integer, ForeignKey("PeriodIndicators.IndicatorID"), nullable=False)
-    period_id = Column(Integer, ForeignKey("PeriodIndicators.PeriodID"), nullable=False)
-
-    period = relationship(
-        "PeriodIndicators", back_populates="GrossDomesticProduct", cascade="all, delete-orphan")
-    indicator = relationship(
-        "PeriodIndicators", back_populates="GrossDomesticProduct", cascade="all, delete-orphan")
-    country = relationship(
-        "CountryIndicators", back_populates="GrossDomesticProduct", cascade="all, delete-orphan")
+    country_indicator = Column(Integer, ForeignKey("country_indicator.Indicators"), nullable=False)
+    indicators_period = Column(Integer, ForeignKey("indicators_period.Indicators"), nullable=False)
 
     @validator('ValueperPeriod')
     def field_value_cannot_be_null(cls, value):
@@ -46,7 +38,5 @@ class GrossDomesticProduct(Base):
         return f" GrossDomesticProduct(GrossDomesticProductID={self.GrossDomesticProductID!r}, " \
                f" ValueperPeriod={self.ValueperPeriod!r}," \
                f" reference_year={self.reference_year!r}," \
-               f" gdp_external_id={self.gdp_external_id!r}," \
-               f" country_id={self.country_id!r}," \
-               f" period_id={self.period_id!r}," \
-               f" indicator_id={self.indicator_id!r})"
+               f" country_indicator={self.country_indicator!r}," \
+               f" indicators_period={self.country_id!r}"

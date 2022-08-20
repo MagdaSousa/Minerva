@@ -1,6 +1,6 @@
 from src.common.Enums import TablesNames
 from pydantic import validator
-from src.domains import Base, Column, Integer, String, relationship, ForeignKey
+from src.database.database import Base, Column, Integer, String, relationship, ForeignKey
 
 
 class IncomeGroups(Base):
@@ -8,6 +8,9 @@ class IncomeGroups(Base):
 
     IncomeGroupID = Column(Integer, primary_key=True)
     ResearchYear = Column(String(50), nullable=False)
+
+    # one-to-one
+    region = relationship("Region", back_populates=f"{TablesNames.income_groups.value.lower()}", uselist=False)
 
     @validator('IncomeGroupID')
     def field_country_name_cannot_be_null(cls, IncomeGroupID):

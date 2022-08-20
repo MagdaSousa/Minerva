@@ -1,16 +1,25 @@
 from src.common.Enums import TablesNames
-from src.domains import Base, Column, Integer, String, relationship
+from src.database.database import Base, Column, Integer, String, relationship
 from pydantic import validator
+from src.domains.models.association_tables.association_tables import indicators_period_association_table,\
+    country_indicator_association_table
 
 
-class Indicator(Base):
+class Indicators(Base):
     __tablename__ = TablesNames.indicators.value
 
     indicatorID = Column(Integer, primary_key=True)
     indicator_name = Column(String(50), nullable=False)
     indicator_code = Column(String(50), nullable=False)
-    period_indicator = relationship("PeriodIndicators", back_populates="IndicatorID")
-    country_indicator = relationship("PeriodIndicators", back_populates="IndicatorID")
+
+    #associative table many-to-many
+    period = relationship(
+        "period", secondary=indicators_period_association_table, back_populates=f"{TablesNames.indicators.value}"
+    )
+
+    country = relationship(
+        "country", secondary=country_indicator_association_table, back_populates=f"{TablesNames.indicators.value}"
+    )
 
     @validator('indicator_name')
     def field_country_name_cannot_be_null(cls, indicator_name):
