@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends, HTTPException, status, Response
+from fastapi import FastAPI, Depends, HTTPException, status, Response,APIRouter
 from typing import Union
 from sqlalchemy.orm import Session
 from src.database.database import DatabaseConnection, Base
@@ -11,7 +11,16 @@ from src.domains.schemas.schemas import GDPCountryNameSchema, GDPFromRegion, GDP
 #
 # Base.metadata.create_all(bind=engine)
 
-app = FastAPI()
+app = FastAPI(docs_url='/docs/Minerva')
+
+
+def get_db():
+    return "dfsdfsdf"
+
+
+@app.get("/")
+def get_by():
+    return "joia"
 
 
 @app.get("/gdp/country/{item}", response_model=GDPCountryNameSchema)

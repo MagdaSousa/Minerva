@@ -18,6 +18,7 @@ class Region(Base):
             raise ValueError('field country_name cannot be null')
 
     def __repr__(self):
-        return f"GrossDomesticProduct(id={self.id!r}, " \
+        return f"Region(id={self.id!r}, " \
                f" regionID={self.regionID!r}," \
                f" region_name={self.region_name!r},"
+

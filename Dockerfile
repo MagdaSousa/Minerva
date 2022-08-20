@@ -1,7 +1,15 @@
-FROM postgres
-ENV POSTGRES_PASSWORD localhost
-ENV POSTGRES_PASSWORD 4585MLV
-ENV POSTGRES_USER desafioMinerva
-ENV POSTGRES_DB db_minerva
-ENV POSTGRES_PORT 5432
-COPY querys.sql /docker-entrypoint-initdb.d/
+FROM python:3.9
+
+#
+WORKDIR /code
+ENV FASTAPI_APP main.py
+#
+COPY requirements.txt requirements.txt
+
+#
+RUN pip3 install -r requirements.txt
+#
+COPY . .
+
+#
+CMD ["uvicorn", "main:app", "--host", "127.0.0.1", "--port", "9000"]

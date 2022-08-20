@@ -10,7 +10,7 @@ Base = declarative_base()
 class DatabaseConnection:
     def __init__(self):
         self.settings = DBSettings()
-        self.database_url = "mysql+pymysql://{0}:{1}@{2}:{3}/{4}".format(
+        self.database_url = "'postgres+psycopg2://{0}:{1}@{2}:{3}/{4}'".format(
             self.settings.db_user,
             self.settings.db_password,
             self.settings.db_host,
@@ -21,7 +21,7 @@ class DatabaseConnection:
         self.sessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=self.engine)
 
     def establishing_connection(self):
-        return create_engine(url=self.database_url)
+        return create_engine(url=self.database_url).
 
     def get_db(self):
         db = self.sessionLocal()
