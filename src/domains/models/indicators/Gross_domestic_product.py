@@ -11,8 +11,8 @@ class GrossDomesticProduct(Base):
     reference_year = Column(DATE(), nullable=False)
     # gdp_external_id = Column(String(100), nullable=False)
 
-    country_indicator = Column(Integer, ForeignKey("country_indicator.Indicators"), nullable=False)
-    indicators_period = Column(Integer, ForeignKey("indicators_period.Indicators"), nullable=False)
+    #country_indicator = Column(Integer, ForeignKey("country_indicator.Indicators"), nullable=False)
+    #indicators_period = Column(Integer, ForeignKey("indicators_period.Indicators"), nullable=False)
 
     @validator('ValueperPeriod')
     def field_value_cannot_be_null(cls, value):

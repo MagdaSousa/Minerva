@@ -1,5 +1,3 @@
-from sqlalchemy import ForeignKey
-
 from src.common.Enums import TablesNames
 from src.database.database import Base, Column, Integer, String, relationship, ForeignKey
 from pydantic import validator
@@ -17,8 +15,6 @@ class Region(Base):
     # one-to-one
     country = relationship("Country", back_populates=f"{TablesNames.region.value.lower()}", uselist=False)
 
-
-
     @validator('region_name')
     def field_country_name_cannot_be_null(cls, region_name):
         if not region_name.replace(" ", ""):
@@ -28,4 +24,3 @@ class Region(Base):
         return f"Region(RegionID={self.RegionID!r}, " \
                f" RegionName={self.RegionName!r}," \
                f" IncomeGroupID={self.IncomeGroupID!r},"
-
