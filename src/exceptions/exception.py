@@ -1,10 +1,12 @@
-class FahrenheitError(Exception):
-    min_f = 32
-    max_f = 212
+class ValueWithInvalidTypeException(Exception):
+    def __init__(self, value, message=None):
+        if not message:
+            message = f'{value} is not a string'
+        super().__init__(message)
 
-    def __init__(self, f, *args):
-        super().__init__(args)
-        self.f = f
 
-    def __str__(self):
-        return f'The {self.f} is not in a valid range {self.min_f, self.max_f}'
+class QueryPeriodErrorException(Exception):
+    def __init__(self, value, message=None):
+        if not message:
+            message = f'{value} período fornecido inválido'
+        super().__init__(message)

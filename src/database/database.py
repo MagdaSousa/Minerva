@@ -9,7 +9,7 @@ Base = declarative_base()
 class DBConnection:
     def __init__(self):
         self.settings = DBSettings()
-        self.database_url = "'postgres+psycopg2://{0}:{1}@{2}:{3}/{4}'".format(
+        self.database_url = "postgresql+psycopg2://{0}:{1}@{2}:{3}/{4}".format(
             self.settings.db_user,
             self.settings.db_password,
             self.settings.db_host,
@@ -27,4 +27,5 @@ class DBConnection:
         try:
             yield db
         finally:
-            db.close()
+            print("finalizei")
+           #db.close()
