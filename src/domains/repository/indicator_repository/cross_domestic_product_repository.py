@@ -24,7 +24,7 @@ class GDPRepository:
             raise logger.error(f"[GrossDomesticProductRepository].[find_by_id]- ERROR- {err} ")
 
     @staticmethod
-    def find_all(db: Session) -> list[GrossDomesticProduct]:
+    def find_all(db: Session) -> list:
         try:
             return db.query(GrossDomesticProduct).all()
 

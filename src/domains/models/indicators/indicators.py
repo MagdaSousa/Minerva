@@ -1,24 +1,18 @@
 from src.common.Enums import TablesNames
 from src.database.database import Base, Column, Integer, String, relationship
 from pydantic import validator
-from src.domains.models.association_tables.association_tables import indicators_period_association_table,\
-    country_indicator_association_table
+
+from src.domains.models.association_tables.association_tables import Association
 
 
 class Indicators(Base):
     __tablename__ = TablesNames.indicators.value
 
-    indicatorID = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     indicator_name = Column(String(50), nullable=False)
     indicator_code = Column(String(50), nullable=False)
-
-    #associative table many-to-many
-    period = relationship(
-        "period", secondary=indicators_period_association_table, back_populates=f"{TablesNames.indicators.value}"
-    )
-
-    country = relationship(
-        "country", secondary=country_indicator_association_table, back_populates=f"{TablesNames.indicators.value}"
+    country_indicators_fk = relationship(
+        "Country", secondary=Association, back_populates="indicator_country_fk"
     )
 
     @validator('indicator_name')
@@ -27,11 +21,11 @@ class Indicators(Base):
             raise ValueError('field indicator_name cannot be null')
 
     @validator('indicator_code')
-    def field_country_name_cannot_be_null(cls, indicator_code):
+    def field_country_code_cannot_be_null(cls, indicator_code):
         if not indicator_code.replace(" ", ""):
             raise ValueError('field indicator_code cannot be null')
 
     def __repr__(self):
-        return f" Indicator(indicatorID={self.indicatorID!r}, " \
-               f" indicator_name={self.value!r}," \
-               f" indicator_code={self.growth_average!r})"
+        return f" Indicators(id={self.id!r}, " \
+               f" indicator_name={self.indicator_name!r}," \
+               f" indicator_code={self.indicator_code!r})"

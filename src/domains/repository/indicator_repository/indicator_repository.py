@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from src.domains.models.indicators.indicators import Indicator
+from src.domains.models.indicators import Indicator
 from loguru import logger
 
 

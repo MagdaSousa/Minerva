@@ -1,18 +1,12 @@
-
-from src.database.database import Table,ForeignKey,Column,Base
-
-
-country_indicator_association_table = Table(
-    "Country_Indicator",
-    Base.metadata,
-    Column("Country", ForeignKey("Country.CountryID"), primary_key=True),
-    Column("Indicators", ForeignKey("indicators.indicatorsID"), primary_key=True),
-)
+from sqlalchemy import Integer
+from sqlalchemy.orm import relationship
+from src.database.database import ForeignKey, Column, Base
 
 
-indicators_period_association_table = Table(
-    "Indicators_Period",
-    Base.metadata,
-    Column("Indicators", ForeignKey("indicators.indicatorsID"), primary_key=True),
-    Column("Period", ForeignKey("period.PeriodID"), primary_key=True),
-)
+class Association(Base):
+    __tablename__ = "Association"
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    country_id = Column(Integer, ForeignKey("Country.id"), nullable=False)
+    indicators_id = Column(Integer, ForeignKey("Indicators.id"), nullable=False)
+
+    gdp_association_fk = relationship("GrossDomesticProduct", back_populates="association_gdp_fk")
