@@ -33,12 +33,11 @@ class DBConnection:
         except Exception as error:
             raise logger.error(f"verifyinsert_executor {error}")
 
-    def delete_executor(self, table_name, values):
+    def delete_executor(self, table_name):
         try:
             with self.engine.connect() as conn:
-                logger.info(f"{values}")
                 conn.detach()
-                query = delete(table_name).values(values)
+                query = delete(table_name)
                 conn.execute(query)
         except Exception as error:
             raise logger.error(f"verifyinsert_executor {error}")

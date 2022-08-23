@@ -171,7 +171,7 @@ class IngestionInPostgres:
         try:
             for index, row in self.df_merge.iterrows():
                 index = +1
-                self.ingestion_period_table_bach(row, index)
+                self.ingestion_period_table_bach(index)
                 self.ingestion_country_table_bach(row, index)
                 self.ingestion_region_table_bach(row, index)
                 self.ingestion_gdp_table_bach(row, index)
@@ -184,54 +184,56 @@ class IngestionInPostgres:
             raise logger.error(f"[iterate_in_rows_to_ingestion] - ERROR - verificar ingestion {error}")
 
     def ingestion_period_table_bach(self, pk):
-
+        self.db.delete_executor(Period)
         for column in list(self.df_merge.columns):
-            if column.isnumeric():
+            if column.isnumeric() and not None:
                 self.db.insert_executor(Period, {"id": pk, "research_year": int(column)})
+                pk += 1
 
     def ingestion_country_table_bach(self, row, pk):
+        self.db.delete_executor(Country)
 
         self.db.insert_executor(Country, {"id": pk,
-                                          "country_name": row[''],
-                                          "country_code": row[''],
+                                          "country_name": row['Country Name'],
+                                          "country_code": row['Country Code'],
                                           "region_id": pk,
-                                          "income_group_id": pk,
-                                          "region_country_fk": pk,
-                                          "income_country_fk": pk,
-                                          "indicator_country_fk": pk,
+                                          "income_group_id": pk
                                           })
 
     def ingestion_region_table_bach(self, row, pk):
+        self.db.delete_executor(Region)
         self.db.insert_executor(Region, {"id": pk,
-                                         "region_name": row[''],
-                                         "country_region_fk": pk})
+                                         "region_name": row['Region']})
 
     def ingestion_gdp_table_bach(self, row, pk):
-        self.db.insert_executor(GrossDomesticProduct, {"id": pk,
-                                                       "value_per_period": row[''],
-                                                       "association_id": pk,
-                                                       "period_id": pk,
-                                                       "income_group_id": pk,
-                                                       "gdp_period_fk": pk,
-                                                       "association_gdp_fk": pk})
+        self.db.delete_executor(GrossDomesticProduct)
+        period = pk
+        key =pk
+        for column in row:
+            if column.isnumeric() and not None:
+                self.db.insert_executor(GrossDomesticProduct, {"id": key,
+                                                               "value_per_period": row[''],
+                                                               "association_id": pk,
+                                                               "period_id": period,
+                                                               "income_group_id": pk})
+                period+=1
+                key += 1
 
     def ingestion_indicator_table_bach(self, row, pk):
-
+        self.db.delete_executor(Indicators)
         self.db.insert_executor(Indicators, {"id": pk,
-                                             "indicator_name": row[''],
-                                             "indicator_code": row[''],
-                                             "country_indicators_fk": pk})
+                                             "indicator_name": row['Indicator Name'],
+                                             "indicator_code": row['Indicator Code']})
 
     def ingestion_income_groups_table_bach(self, row, pk):
+        self.db.delete_executor(IncomeGroups)
         self.db.insert_executor(IncomeGroups, {"id": pk,
-                                               "income_level": row[''],
-                                               "country_income_fk": pk})
+                                               "income_level": row['IncomeGroup']})
 
     def ingestion_association_groups_table_bach(self, pk):
-
+        self.db.delete_executor(Association)
         self.db.insert_executor(Association, {"id": pk,
                                               "country_id": pk,
-                                              "gdp_association_fk": pk,
                                               "indicators_id": pk})
 
 
