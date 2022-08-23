@@ -1,5 +1,6 @@
 import re
 from src.database.database import DBConnection, insert
+from src.domains.models.association_tables.association_tables import Association
 from src.domains.models.country.country import Country
 from src.domains.models.country.region import Region
 from src.domains.models.income_groups.invome_groups import IncomeGroups
@@ -170,12 +171,14 @@ class IngestionInPostgres:
         try:
             for index, row in self.df_merge.iterrows():
                 index = +1
-                self.ingestion_period_table_bach(index)
-                # self.ingestion_region_table_bach(row)
-                # self.ingestion_gdp_table_bach(row)
-                # self.ingestion_indicator_table_bach(row)
-                # self.ingestion_country_table_bach(row)
-                # self.ingestion_income_groups_table_bach(row)
+                self.ingestion_period_table_bach(row, index)
+                self.ingestion_country_table_bach(row, index)
+                self.ingestion_region_table_bach(row, index)
+                self.ingestion_gdp_table_bach(row, index)
+                self.ingestion_indicator_table_bach(row, index)
+                self.ingestion_income_groups_table_bach(row, index)
+                self.ingestion_association_groups_table_bach(index)
+
 
         except Exception as error:
             raise logger.error(f"[iterate_in_rows_to_ingestion] - ERROR - verificar ingestion {error}")
@@ -191,43 +194,45 @@ class IngestionInPostgres:
         self.db.insert_executor(Country, {"id": pk,
                                           "country_name": row[''],
                                           "country_code": row[''],
-                                          "region_id": row[''],
-                                          "income_group_id": row[''],
-                                          "region_country_fk": row[''],
-                                          "income_country_fk": row[''],
-                                          "indicator_country_fk": row[''],
+                                          "region_id": pk,
+                                          "income_group_id": pk,
+                                          "region_country_fk": pk,
+                                          "income_country_fk": pk,
+                                          "indicator_country_fk": pk,
                                           })
 
-    def ingestion_region_table_bach(self, row,pk):
+    def ingestion_region_table_bach(self, row, pk):
         self.db.insert_executor(Region, {"id": pk,
-                                          "region_name": row[''],
-                                          "country_region_fk": row[''])
+                                         "region_name": row[''],
+                                         "country_region_fk": pk})
 
-    def ingestion_gdp_table_bach(self, row,pk):
+    def ingestion_gdp_table_bach(self, row, pk):
         self.db.insert_executor(GrossDomesticProduct, {"id": pk,
-                                          "value_per_period": row[''],
-                                          "association_id": row[''],
-                                          "period_id": row[''],
-                                          "income_group_id": row[''],
-                                          "gdp_period_fk": row[''],
-                                          "association_gdp_fk": row['']})
+                                                       "value_per_period": row[''],
+                                                       "association_id": pk,
+                                                       "period_id": pk,
+                                                       "income_group_id": pk,
+                                                       "gdp_period_fk": pk,
+                                                       "association_gdp_fk": pk})
 
-    def ingestion_indicator_table_bach(self, row,pk):
+    def ingestion_indicator_table_bach(self, row, pk):
 
         self.db.insert_executor(Indicators, {"id": pk,
-                                           "indicator_name": row[''],
-                                           "indicator_code": row[''],
-                                           "country_indicators_fk": row['']})
+                                             "indicator_name": row[''],
+                                             "indicator_code": row[''],
+                                             "country_indicators_fk": pk})
 
-    def ingestion_income_groups_table_bach(self, row):
+    def ingestion_income_groups_table_bach(self, row, pk):
+        self.db.insert_executor(IncomeGroups, {"id": pk,
+                                               "income_level": row[''],
+                                               "country_income_fk": pk})
 
-        IncomeGroups(
-            indicator_name=row['income_level'])
+    def ingestion_association_groups_table_bach(self, pk):
 
-    def ingestion_association_groups_table_bach(self, row):
-
-        IncomeGroups(
-            indicator_name=row['income_level'])
+        self.db.insert_executor(Association, {"id": pk,
+                                              "country_id": pk,
+                                              "gdp_association_fk": pk,
+                                              "indicators_id": pk})
 
 
 teste = ExtractAndTransformDataSet().processamento_para_database()
