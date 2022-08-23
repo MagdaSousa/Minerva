@@ -1,7 +1,12 @@
 from fastapi import FastAPI, Depends, HTTPException, status
-from typing import Union
 from sqlalchemy.orm import Session
-from src.database.database import DBConnection, Base
+from src.database.database import DBConnection,Base
+from src.domains.models.association_tables.association_tables import Association
+from src.domains.models.indicators.indicators import Indicators
+from src.domains.models.income_groups.invome_groups import IncomeGroups
+from src.domains.models.country.region import Region
+from src.domains.models.country.country import Country
+from src.domains.models.period.period import Period
 from src.domains.actions.gross_domestic_product_action import GDPAction
 from src.domains.schemas.schemas import GDPCountryNameSchema, GDPFromRegion, GDPFromPeriod
 from src.utils.utils import validating_user_input_data_type, validations_per_period
@@ -17,7 +22,7 @@ app = FastAPI(docs_url='/docs/Minerva')
 
 @app.get("/")
 def get_by_country_name():
-    return 'jdssgdfsgsdfgvd'
+    return {"Hello": "World"}
 
 
 @app.get("/gdp/country/{item}", response_model=GDPCountryNameSchema)

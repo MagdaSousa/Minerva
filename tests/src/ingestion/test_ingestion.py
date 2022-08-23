@@ -1,25 +1,7 @@
-import re
 
-from src.domains.models.country.country import Country
-from src.domains.models.country.region import Region
-from src.domains.models.income_groups.invome_groups import IncomeGroups
-from src.domains.models.indicators.Gross_domestic_product import GrossDomesticProduct
-from src.domains.models.indicators.indicators import Indicators
-from src.domains.models.period.period import Period
-import pandas as pd
-from typing import Union
-import operator
 from loguru import logger
 
-
-class ExtractAndTransformDataSet:
-    def __init__(self):
-        self.url_gist_country = 'https://gist.githubusercontent.com/MagdaSousa/da6d007edfdf38019b0de219c4d18ad6/raw' \
-                                '/a5f33797ec661a77d3587352f699dbb97b3487d8/API_NY_GDP_MKT_KD_ZG_DS2_en_csv_v2_4344066' \
-                                '.csv '
-        self.url_gist_region = 'https://gist.githubusercontent.com/MagdaSousa/46c3139e06d45f22b28b9f0c1a9d1df2/raw' \
-                               '/98c2030cea6d5a66fdda1f2f86467999b73f7b93' \
-                               '/Metadata_Country_API_NY_GDP_MKTP_KD_ZG_DS2_en_csv_v2_4344066.csv '
+read_datasets
 
     def read_datasets(self, url: str):
         """
@@ -163,18 +145,17 @@ class IngestionInPostgres:
         self.df_merge = df_merge
 
     def iterate_in_rows_to_ingestion(self):
-        try:
-            for index, row in self.df_merge.iterrows():
+        for index, row in self.df_merge.iterrows():
+            row["IncomeGroup"]
+            row["Country Code"]
+            row["Region"]
+            self.ingestion_country_table_bach(row)
+            self.ingestion_region_table_bach(row)
+            self.ingestion_gdp_table_bach(row)
+            self.ingestion_indicator_table_bach(row)
 
-                self.ingestion_country_table_bach(row)
-                self.ingestion_region_table_bach(row)
-                self.ingestion_gdp_table_bach(row)
-                self.ingestion_indicator_table_bach(row)
-                self.ingestion_country_table_bach(row)
-                self.ingestion_indicator_table_bach(row)
-
-        except Exception as error:
-            raise logger.error(f"[iterate_in_rows_to_ingestion] - ERROR - verificar ingestion {error}")
+            self.ingestion_country_table_bach(row)
+            self.ingestion_indicator_table_bach(row)
 
     def ingestion_period_table_bach(self):
 
@@ -184,47 +165,24 @@ class IngestionInPostgres:
 
     def ingestion_country_table_bach(self, row):
 
-        region_id = Column(Integer, ForeignKey("Region.id"), nullable=False)
-        income_group_id = Column(Integer, ForeignKey("IncomeGroups.id"), nullable=False)
-
-        region_country_fk = relationship("Region", back_populates="country_region_fk")
-        income_country_fk = relationship("IncomeGroups", back_populates="country_income_fk")
-        indicator_country_fk = relationship(
-            "Indicators", secondary=Association, back_populates="country_indicators_fk"
-        )
-
-        Country(
+        country = Country(
             country_name=row['Country Name'],
-            country_code=row['Country Code'],
-            region_id=row['Country Code'],
-            country_code=row['Country Code'],
-            country_code=row['Country Code'],
-        )
+            country_code=row['Country Code'])
 
     def ingestion_region_table_bach(self, row):
-        Region(
-            region_name=row['region_name'])
+        region = Region(
+            region_name=row['Region'])
 
     def ingestion_gdp_table_bach(self, row):
 
         GrossDomesticProduct(
-            value_per_period=row['value_per_period'])
+            value_per_period=row['Country Code'])
 
     def ingestion_indicator_table_bach(self, row):
 
-        Indicators(
+        indicator = Indicators(
             indicator_name=row['Indicator Name'],
             indicator_code=row['Indicator Code'])
-
-    def ingestion_income_groups_table_bach(self, row):
-
-        IncomeGroups(
-            indicator_name=row['income_level'])
-
-    def ingestion_association_groups_table_bach(self, row):
-
-        IncomeGroups(
-            indicator_name=row['income_level'])
 
 
 teste = ExtractAndTransformDataSet().processamento_para_database()

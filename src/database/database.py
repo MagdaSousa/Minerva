@@ -1,3 +1,5 @@
+import os
+
 from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy.ext.declarative import declarative_base
 from src.database.settings import DBSettings

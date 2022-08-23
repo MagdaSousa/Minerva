@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from src.domains.models.country.country import Country
+from src.domains.models.country import Country
 from loguru import logger
 
 

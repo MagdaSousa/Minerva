@@ -1,23 +1,22 @@
 from src.common.Enums import TablesNames
 from pydantic import validator
 from src.database.database import Base, Column, Integer, String, relationship, ForeignKey
-from src.domains.models.association_tables.association_tables import country_indicator_association_table
+from src.domains.models.association_tables.association_tables import Association
 
 
 class Country(Base):
     __tablename__ = TablesNames.country.value
 
-    CountryID = Column(Integer, primary_key=True)
-    CountryName = Column(String(50), nullable=False)
-    CountryCode = Column(String(50), nullable=False)
-    RegionID = Column(Integer, ForeignKey("region.RegionID"), nullable=False)
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    country_name = Column(String(50), nullable=False)
+    country_code = Column(String(50), nullable=False)
+    region_id = Column(Integer, ForeignKey("Region.id"), nullable=False)
+    income_group_id = Column(Integer, ForeignKey("IncomeGroups.id"), nullable=False)
 
-    # many-to-one
-    region = relationship("Region", back_populates=f"{TablesNames.country.value.lower()}")
-
-    # associative table many-to-many
-    indicator = relationship(
-        "indicator", secondary=country_indicator_association_table, back_populates=f"{TablesNames.country.value}"
+    region_country_fk = relationship("Region", back_populates="country_region_fk")
+    income_country_fk = relationship("IncomeGroups", back_populates="country_income_fk")
+    indicator_country_fk = relationship(
+        "Indicators", secondary=Association, back_populates="country_indicators_fk"
     )
 
     @validator('CountryName')
