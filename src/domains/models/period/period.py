@@ -1,9 +1,8 @@
+from sqlalchemy.orm import relationship
+
 from src.common.Enums import TablesNames
 from pydantic import validator
-from src.database.database import Base, Column, Integer, String, relationship
-
-
-# from src.domains.models.association_tables.association_tables import indicators_period_association_table
+from src.database.database import Base, Column, Integer
 
 
 class Period(Base):
@@ -16,7 +15,7 @@ class Period(Base):
     @validator('research_year')
     def field_reference_year_cannot_be_null(cls, country_code):
         if not country_code.replace(" ", ""):
-            raise ValueError('field country_code cannot be null')
+            raise ValueError('field research_year cannot be null')
 
     def __repr__(self):
         return f"Period(id={self.id!r},  research_year={self.research_year!r})"

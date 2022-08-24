@@ -8,7 +8,7 @@ class Country(Base):
     __tablename__ = TablesNames.country.value
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    country_name = Column(String(50), nullable=False)
+    country_name = Column(String(100), nullable=False)
     country_code = Column(String(50), nullable=False)
     region_id = Column(Integer, ForeignKey("Region.id"), nullable=False)
     income_group_id = Column(Integer, ForeignKey("IncomeGroups.id"), nullable=False)
