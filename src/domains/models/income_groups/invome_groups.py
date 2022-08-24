@@ -12,7 +12,7 @@ class IncomeGroups(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     income_level = Column(String(60), nullable=False)
 
-    country_income_fk = relationship("IncomeGroups", back_populates="income_country_fk")
+    country_income_fk = relationship("Country", back_populates="income_country_fk")
 
     @validator('income_level')
     def field_country_name_cannot_be_null(cls, income_level):

@@ -2,10 +2,12 @@ from sqlalchemy.orm import relationship
 
 from src.common.Enums import TablesNames
 from pydantic import validator
-from src.database.database import Base, Column, Integer
+from src.database.database import Base, Column, Integer,select
+from src.domains.models.indicators.Gross_domestic_product import GrossDomesticProduct
 
 
-class Period(Base):
+
+class  Period(Base):
     __tablename__ = TablesNames.period.value
 
     id = Column(Integer, primary_key=True, autoincrement=True)

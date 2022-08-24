@@ -19,7 +19,7 @@ class GDPRepository:
     def find_gdp_by_region_name(db: Session, id: int) -> GrossDomesticProduct:
         try:
 
-            return db.query(GrossDomesticProduct).filter(GrossDomesticProduct.GDPGrowthAnnualID == id).first()
+            return db.query(GrossDomesticProduct).filter(GrossDomesticProduct.association_id == id).first()
         except Exception as err:
             raise logger.error(f"[GrossDomesticProductRepository].[find_by_id]- ERROR- {err} ")
 

@@ -1,3 +1,5 @@
+from sqlalchemy import select
+
 from src.database.database import DBConnection, insert
 from src.domains.models.association_tables.association_tables import Association
 from src.domains.models.country.country import Country
@@ -265,7 +267,19 @@ class IngestionInPostgres:
 
 
 if __name__ == "__main__":
-    teste = ExtractAndTransformDataSet().processamento_para_database()
+   # teste = ExtractAndTransformDataSet().processamento_para_database()
 
-    ingestion = IngestionInPostgres(teste)
-    ingestion.iterate_in_rows_to_ingestion()
+    # ingestion = IngestionInPostgres(teste)
+    # ingestion.iterate_in_rows_to_ingestion()
+    db = DBConnection()
+    result = db.select_executor(Period)
+    for x in result:
+        print(x)
+    # stmt = select(Period)
+    # print(stmt)
+    # with db.engine.connect() as conn:
+    #     conn.detach()
+    #     query = select(Period)
+    #     r =conn.execute(query)
+    #     for x in r:
+    #         print(x)

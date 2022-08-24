@@ -12,7 +12,7 @@ class Indicators(Base):
     indicator_name = Column(String(50), nullable=False)
     indicator_code = Column(String(50), nullable=False)
     country_indicators_fk = relationship(
-        "Country", secondary=Association, back_populates="indicator_country_fk"
+        "Country", secondary="Association", back_populates="indicator_country_fk"
     )
 
     @validator('indicator_name')

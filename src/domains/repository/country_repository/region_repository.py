@@ -28,21 +28,23 @@ class RegionRepository:
     @staticmethod
     def find_by_id(db: Session, id: int) -> Region:
         try:
-            return db.query(Region).filter(Region.RegionID == id).first()
+            result = db.query(Region).filter(Region.id == id).first()
+            return result
         except Exception as err:
             raise logger.error(f"[RegionRepository].[find_by_id]- ERROR- {err} ")
 
     @staticmethod
-    def find_by_Region_code(db: Session, id: int) -> Region:
+    def find_by_region_name(db: Session, name: str) -> Region:
         try:
-            return db.query(Region).filter(Region.RegionID == id).first()
+            result = db.query(Region).filter(Region.region_name == name).first()
+            return result
         except Exception as err:
             raise logger.error(f"[RegionRepository].[find_by_id]- ERROR- {err} ")
 
     @staticmethod
     def exists_by_id(db: Session, id: int) -> bool:
         try:
-            return db.query(Region).filter(Region.RegionID == id).first() is not None
+            return db.query(Region).filter(Region.id == id).first() is not None
 
         except Exception as err:
             raise logger.error(f"[RegionRepository].[exists_by_id]- ERROR- {err} ")
@@ -50,7 +52,7 @@ class RegionRepository:
     @staticmethod
     def delete(db: Session, id: int) -> None:
         try:
-            region = db.query(Region).filter(Region.regionID == id).first()
+            region = db.query(Region).filter(Region.id == id).first()
             if region is not None:
                 db.delete(region)
                 db.commit()
