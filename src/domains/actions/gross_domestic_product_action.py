@@ -12,12 +12,11 @@ class GDPAction:
     @staticmethod
     def find_by_country_code_or_country_name(db: Session, item: str) -> GDPRepository:
         try:
-            print(1)
-            # if len(item) == 3:
-            #     gdp = GDPRepository.find_by_country_code(db, item)
-            # else:
-            #     gdp = GDPRepository.find_by_country_name(db, item)
-            # return gdp
+            if len(item) == 3:
+                gdp = GDPRepository.find_by_country_code(db, item)
+            else:
+                gdp = GDPRepository.find_by_country_name(db, item)
+            return gdp
         except Exception as err:
             raise logger.error(f"[GDPAction].[find_by_country_code_or_country_name]- ERROR- {err} ")
 

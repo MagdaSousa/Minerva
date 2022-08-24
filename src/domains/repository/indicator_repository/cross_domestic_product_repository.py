@@ -11,7 +11,7 @@ class GDPRepository:
     @staticmethod
     def find_by_country_code(db: Session, code: int) -> GrossDomesticProduct:
         try:
-            return db.query(GrossDomesticProduct).filter(GrossDomesticProduct.GDPGrowthAnnualID == id).first()
+            return db.query(GrossDomesticProduct).filter(GrossDomesticProduct.association_id == id).first()
         except Exception as err:
             raise logger.error(f"[GrossDomesticProductRepository].[find_by_id]- ERROR- {err} ")
 
