@@ -61,7 +61,6 @@ class ExtractAndTransformDataSet:
             logger.info("[verify_duplicate_columns] - load data")
             list_columns = operator.add(list(df_region.columns.values), list(df_indicator.columns.values))
             duplicates = [x for x in list_columns if list_columns.count(x) > 1]
-            print(duplicates)
             return duplicates
 
         except Exception as err:
@@ -137,7 +136,6 @@ class ExtractAndTransformDataSet:
     def delete_columns(self, df):
         df.drop(columns=['Unnamed: 5', 'Country Code_x', 'Unnamed: 66'], inplace=True)
         df.rename(columns={'Country Code_y': 'Country Code'}, inplace=True)
-        print("kkk", df.columns.values)
         return df
 
     def verify_nan_values(self, df):
@@ -166,32 +164,42 @@ class IngestionInPostgres:
         self.insert = insert
         self.db = DBConnection()
         self.engine = self.db.engine
+        self.regions = self.df_merge.drop_duplicates(subset=['Region'])
+        self.income_groups = self.df_merge.drop_duplicates(subset=['IncomeGroup'])
 
     def iterate_in_rows_to_ingestion(self):
         try:
+            self.db.delete_executor(GrossDomesticProduct)
+            self.db.delete_executor(Association)
+            self.db.delete_executor(Country)
+            self.db.delete_executor(Indicators)
+            self.db.delete_executor(IncomeGroups)
+
+            self.db.delete_executor(Region)
+            self.db.delete_executor(Period)
             for index, row in self.df_merge.iterrows():
                 index = +1
-                self.ingestion_period_table_bach(index)
-                self.ingestion_country_table_bach(row, index)
-                self.ingestion_region_table_bach(row, index)
-                self.ingestion_gdp_table_bach(row, index)
-                self.ingestion_indicator_table_bach(row, index)
-                self.ingestion_income_groups_table_bach(row, index)
-                self.ingestion_association_groups_table_bach(index)
 
+                self.ingestion_period_table_bach(index)
+                self.ingestion_region_table_bach(index)
+                self.ingestion_income_groups_table_bach(index)
+                self.ingestion_country_table_bach(row, index)
+                self.ingestion_indicator_table_bach(row, index)
+                self.ingestion_association_groups_table_bach(index)
+                self.ingestion_gdp_table_bach(row, index)
 
         except Exception as error:
             raise logger.error(f"[iterate_in_rows_to_ingestion] - ERROR - verificar ingestion {error}")
 
     def ingestion_period_table_bach(self, pk):
-        self.db.delete_executor(Period)
+
         for column in list(self.df_merge.columns):
             if column.isnumeric() and not None:
                 self.db.insert_executor(Period, {"id": pk, "research_year": int(column)})
                 pk += 1
 
     def ingestion_country_table_bach(self, row, pk):
-        self.db.delete_executor(Country)
+
 
         self.db.insert_executor(Country, {"id": pk,
                                           "country_name": row['Country Name'],
@@ -200,38 +208,47 @@ class IngestionInPostgres:
                                           "income_group_id": pk
                                           })
 
-    def ingestion_region_table_bach(self, row, pk):
-        self.db.delete_executor(Region)
-        self.db.insert_executor(Region, {"id": pk,
-                                         "region_name": row['Region']})
+    def ingestion_region_table_bach(self, pk):
+
+        self.regions['Region'].fillna('inexistente', inplace=True)
+        key = pk
+        for index, region_name in self.regions['Region'].items():
+            if region_name != 'inexistente':
+                self.db.insert_executor(Region, {"id": key,
+                                                 "region_name": region_name})
+                key += 1
 
     def ingestion_gdp_table_bach(self, row, pk):
-        self.db.delete_executor(GrossDomesticProduct)
         period = pk
-        key =pk
-        for column in row:
+        key = pk
+        for column in list(self.df_merge.columns):
             if column.isnumeric() and not None:
                 self.db.insert_executor(GrossDomesticProduct, {"id": key,
-                                                               "value_per_period": row[''],
+                                                               "value_per_period": row[column],
                                                                "association_id": pk,
                                                                "period_id": period,
                                                                "income_group_id": pk})
-                period+=1
+                period += 1
                 key += 1
 
     def ingestion_indicator_table_bach(self, row, pk):
-        self.db.delete_executor(Indicators)
+
         self.db.insert_executor(Indicators, {"id": pk,
                                              "indicator_name": row['Indicator Name'],
                                              "indicator_code": row['Indicator Code']})
 
-    def ingestion_income_groups_table_bach(self, row, pk):
-        self.db.delete_executor(IncomeGroups)
-        self.db.insert_executor(IncomeGroups, {"id": pk,
-                                               "income_level": row['IncomeGroup']})
+    def ingestion_income_groups_table_bach(self, pk):
+
+        self.income_groups['IncomeGroup'].fillna('inexistente', inplace=True)
+        key = pk
+        for index, income_groups in self.income_groups['IncomeGroup'].items():
+            if income_groups != 'inexistente':
+                self.db.insert_executor(IncomeGroups, {"id": key,
+                                                       "income_level": income_groups})
+                key += 1
 
     def ingestion_association_groups_table_bach(self, pk):
-        self.db.delete_executor(Association)
+
         self.db.insert_executor(Association, {"id": pk,
                                               "country_id": pk,
                                               "indicators_id": pk})
