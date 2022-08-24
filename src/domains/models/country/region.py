@@ -3,13 +3,15 @@ from src.database.database import Base, Column, Integer, String, relationship, F
 from pydantic import validator
 
 
+
 class Region(Base):
     __tablename__ = TablesNames.region.value
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     region_name = Column(String(50), nullable=False)
 
-    country_region_fk = relationship("Country", foreign_keys="Country.id")
+    #country_region_fk = relationship("Country", foreign_keys="Country.id")
+    country_region_fk = relationship("Country", back_populates="region_country_fk")
 
     @validator('region_name')
     def field_country_name_cannot_be_null(cls, region_name):

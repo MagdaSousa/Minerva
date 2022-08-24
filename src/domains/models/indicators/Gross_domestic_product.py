@@ -2,7 +2,7 @@ from sqlalchemy.orm import relationship
 
 from src.common.Enums import TablesNames
 from pydantic import validator
-from src.database.database import Base, Column, Integer, ForeignKey, Float, DATE
+from src.database.database import Base, Column, Integer, ForeignKey, Float
 
 
 class GrossDomesticProduct(Base):
@@ -24,6 +24,5 @@ class GrossDomesticProduct(Base):
     def __repr__(self):
         return f" GrossDomesticProduct(id={self.id!r}, " \
                f" value_per_period={self.value_per_period!r}," \
-               f" country_id={self.country_id!r}," \
-               f" indicators_id={self.indicators_id!r}," \
+               f" association_id={self.association_id!r}," \
                f" period_id={self.period_id!r}"

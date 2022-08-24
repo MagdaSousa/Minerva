@@ -1,7 +1,8 @@
 from fastapi import FastAPI, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from src.database.database import DBConnection,Base
+from src.database.database import DBConnection, Base
 from src.domains.models.association_tables.association_tables import Association
+from src.domains.models.indicators.Gross_domestic_product import GrossDomesticProduct
 from src.domains.models.indicators.indicators import Indicators
 from src.domains.models.income_groups.invome_groups import IncomeGroups
 from src.domains.models.country.region import Region
@@ -29,13 +30,12 @@ def get_by_country_name():
 def get_by_country_name(item: str, db: Session = Depends(get_db)):
     """○ Todos os dados relacionados a um país informado (indicadores e descrição,
     com exceção da coluna SpecialNotes). input: Nome ou código do país"""
-
     gdp = GDPAction.find_by_country_code_or_country_name(db, item)
 
-    if not gdp:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Country name not found"
-        )
+    # if not gdp:
+    #     raise HTTPException(
+    #         status_code=status.HTTP_404_NOT_FOUND, detail="Country name not found"
+    #     )
 
     return status.HTTP_200_OK, GDPCountryNameSchema.from_orm(gdp)
 
@@ -73,6 +73,7 @@ def get_by_period(intial_period: int, final_period: int, db: Session = Depends(g
     como parâmetro na API."""
 
     validations_per_period(intial_period, final_period)
+
     gdp = GDPAction.find_average_gdp_by_country(db, intial_period, final_period)
 
     if not gdp:
@@ -80,3 +81,5 @@ def get_by_period(intial_period: int, final_period: int, db: Session = Depends(g
             status_code=status.HTTP_404_NOT_FOUND, detail="Curso não encontrado"
         )
     return status.HTTP_200_OK, GDPFromPeriod.from_orm(gdp)
+
+
