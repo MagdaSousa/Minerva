@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from src.domains.models.country import Country
+from src.domains.models.country.country import Country
 from loguru import logger
 
 
@@ -33,11 +33,20 @@ class CountryRepository:
             raise logger.error(f"[CountryRepository].[find_by_id]- ERROR- {err} ")
 
     @staticmethod
-    def find_by_country_code(db: Session, id: int) -> Country:
+    def find_by_country_code(db: Session, code: str) -> Country:
         try:
-            return db.query(Country).filter(Country.countryID == id).first()
+            results = db.query(Country).filter(Country.country_code == code).first()
+            return results
         except Exception as err:
-            raise logger.error(f"[CountryRepository].[find_by_id]- ERROR- {err} ")
+            raise logger.error(f"[CountryRepository].[find_by_country_code]- ERROR- {err} ")
+
+    @staticmethod
+    def find_by_country_name(db: Session, name: str) -> Country:
+        try:
+            results = db.query(Country).filter(Country.country_name == name).first()
+            return results
+        except Exception as err:
+            raise logger.error(f"[CountryRepository].[find_by_country_name]- ERROR- {err} ")
 
     @staticmethod
     def exists_by_id(db: Session, id: int) -> bool:

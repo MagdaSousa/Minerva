@@ -1,6 +1,18 @@
 from sqlalchemy.orm import Session
+from src.domains.actions.association_action import AssociationAction
+from src.domains.actions.country_action import CountryAction
+from src.domains.actions.indicators_action import IndicatorsAction
 from src.domains.repository.indicator_repository.cross_domestic_product_repository import GDPRepository
+from src.domains.repository.indicator_repository.indicator_repository import Indicators
+from src.domains.repository.country_repository.country_repopsitory import CountryRepository
+
 from loguru import logger
+
+
+
+obj_country = CountryAction
+obj_association = AssociationAction
+obj_indicators = IndicatorsAction
 
 
 class GDPAction:
@@ -9,13 +21,22 @@ class GDPAction:
     """
 
     @staticmethod
-    def find_by_country_code_or_country_name(db: Session, item: str) -> GDPRepository:
+    def find_by_country_code_or_country_name(db: Session, item: str) -> [GDPRepository, CountryRepository, Indicators]:
         try:
             if len(item) == 3:
-                gdp = GDPRepository.find_by_country_code(db, item)
+                country_infos = obj_country.find_by_country_code(db, item)
+
             else:
-                gdp = GDPRepository.find_by_country_name(db, item)
-            return gdp
+                country_infos = obj_country.find_by_country_name(db, item)
+
+            association_infos = obj_association.find_by_country_id(db, country_infos.id)
+
+            indicators_infos = obj_indicators.find_by_indicator_id(db, association_infos.indicators_id)
+
+            gdp = GDPRepository.find_by_associations_id(db, association_infos.id)
+
+            return [gdp, country_infos, indicators_infos]
+
         except Exception as err:
             raise logger.error(f"[GDPAction].[find_by_country_code_or_country_name]- ERROR- {err} ")
 
@@ -36,7 +57,6 @@ class GDPAction:
     def find_by_region_name(db: Session, name: str) -> GDPRepository:
 
         try:
-
 
             gdp = GDPRepository.find_gdp_by_region_name(db, name)
             logger.info(f"[GDPAction].[find_by_region_name]- GDP- {gdp} ")

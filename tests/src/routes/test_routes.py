@@ -1,30 +1,106 @@
-# testes- coletar os países e fazer a média
-from src.database.database import DBConnection
-from src.domains.models.association_tables.association_tables import Association
-from src.domains.models.indicators.Gross_domestic_product import GrossDomesticProduct
-from src.domains.models.period.period import Period
+from src.routes.routes import app, get_db
+from fastapi.testclient import TestClient
+import requests
 
-obj_connection = DBConnection()
-engine = obj_connection.engine
-get_db = obj_connection.get_db()
+client = TestClient(app)
 
 
-class TestRoutes:
-    def __init__(self):
-        pass
+class TestApi:
+    def my_second_override(self):
+        return {"another": "override"}
 
-    def test_coletar_periodo(self):
-        final_period = 1989
-        initial_period = 1995
+    def test_get_country_by_code(self, fastapi_dep, response_api):
+        with fastapi_dep(app).override(
+                {
+                    get_db: get_db
+                }
+        ):
+            country_code = 'UKR'
+            response = client.get(f"/gdp/country/{country_code}")
+            assert response.status_code == 200
+            assert response.json() == response_api
 
-        # coletando o período
-        result = get_db.query(Period).filter(initial_period <= Period.research_year <= final_period).first()
+    def test_get_country_by_name(self, fastapi_dep, response_api):
+        with fastapi_dep(app).override(
+                {
+                    get_db: get_db
+                }
+        ):
+            country_name = 'Ukraine'
+            response = client.get(f"/gdp/country/{country_name}")
+            assert response.status_code == 200
+            assert response.json() == response_api
 
-        print(result)
+    def test_get_country_by_name_error(self, fastapi_dep):
+        with fastapi_dep(app).override(
+                {
+                    get_db: get_db
+                }
+        ):
+            invalid_value = 1
+            response = client.get(f"/gdp/country/{invalid_value}")
+            assert response.status_code == 400
+            assert response.json() == {'detail': '1 is not a string'}
 
-    # associations = get_db().query(GrossDomesticProduct).filter(Association.id == 1).first()
+    def test_get_country_by_code_error(self, fastapi_dep):
+        with fastapi_dep(app).override(
+                {
+                    get_db: get_db
+                }
+        ):
+            invalid_value = 1
+            response = client.get(f"/gdp/country/{invalid_value}")
+            assert response.status_code == 400
+            assert response.json() == {'detail': '1 is not a string'}
 
-    # print(associations.gdp_association_fk)
+    def test_get_rate_by_country(self, fastapi_dep):
+        with fastapi_dep(app).override(
+                {
+                    get_db: "plain_override_object"
+                }
+        ):
+            response = client.get(f"/gdp/rate/country/{item}")
+            assert response.status_code == 400
+            assert response.json() == {
+                "first_dep": "plain_override_object",
+                "second_dep": {"another": "override"},
+            }
 
+    def test_get_rate_by_country_error(self, fastapi_dep):
+        with fastapi_dep(app).override(
+                {
+                    get_db: "plain_override_object"
+                }
+        ):
+            response = client.get(f"/gdp/rate/country/{item}")
+            assert response.status_code == 404
+            assert response.json() == {
+                "first_dep": "plain_override_object",
+                "second_dep": {"another": "override"},
+            }
 
-TestRoutes().test_coletar_período()
+    def test_get_region(self, fastapi_dep):
+        with fastapi_dep(app).override(
+                {
+                    get_db: "plain_override_object"
+                }
+        ):
+            response = client.get(f"/gdp/region/{item}")
+            assert response.status_code == 404
+            assert response.json() == {
+                "first_dep": "plain_override_object",
+                "second_dep": {"another": "override"},
+            }
+
+    def test_get_region_error(self, fastapi_dep):
+        with fastapi_dep(app).override(
+                {
+                    get_db: "plain_override_object"
+                }
+        ):
+            response = client.get(f"/gdp/region/{item}")
+            assert response.status_code == 404
+            assert response.json() == {
+                "first_dep": "plain_override_object",
+                "second_dep": {"another": "override"},
+            }

@@ -1,58 +1,60 @@
 from sqlalchemy.orm import Session
-from src.domains.models.indicators import Indicator
+from src.domains.models.indicators.indicators import Indicators
 from loguru import logger
 
 
-class IndicatorRepository:
+class IndicatorsRepository:
     @staticmethod
-    def find_all(db: Session) -> list[Indicator]:
+    def find_all(db: Session) -> list[Indicators]:
         try:
-            return db.query(Indicator).all()
+            return db.query(Indicators).all()
 
         except Exception as err:
-            raise logger.error(f"[IndicatorRepository].[find_all]- ERROR- {err} ")
+            raise logger.error(f"[IndicatorsRepository].[find_all]- ERROR- {err} ")
 
     @staticmethod
-    def save(db: Session, indicator: Indicator) -> Indicator:
+    def save(db: Session, indicators: Indicators) -> Indicators:
         try:
-            if Indicator.id:
-                db.merge(indicator)
+            if indicators.id:
+                db.merge(indicators)
             else:
-                db.add(indicator)
+                db.add(indicators)
             db.commit()
-            return indicator
+            return indicators
 
         except Exception as err:
-            raise logger.error(f"[IndicatorRepository].[save]- ERROR- {err} ")
-
-    @staticmethod
-    def find_by_id(db: Session, id: int) -> Indicator:
-        try:
-            return db.query(Indicator).filter(Indicator.IndicatorID == id).first()
-        except Exception as err:
-            raise logger.error(f"[IndicatorRepository].[find_by_id]- ERROR- {err} ")
+            raise logger.error(f"[IndicatorsRepository].[save]- ERROR- {err} ")
 
     @staticmethod
-    def find_by_Indicator_code(db: Session, id: int) -> Indicator:
+    def find_by_indicators_id(db: Session, id: int) -> Indicators:
         try:
-            return db.query(Indicator).filter(Indicator.IndicatorID == id).first()
+            result =db.query(Indicators).filter(Indicators.id == id).all()
+            return  result
         except Exception as err:
-            raise logger.error(f"[IndicatorRepository].[find_by_id]- ERROR- {err} ")
+            raise logger.error(f"[IndicatorsRepository].[find_by_id]- ERROR- {err} ")
+
+    @staticmethod
+    def find_by_indicators_code(db: Session, code: str) -> Indicators:
+        try:
+            result =db.query(Indicators).filter(Indicators.indicator_code == code).all()
+            return  result
+        except Exception as err:
+            raise logger.error(f"[IndicatorsRepository].[find_by_indicators_code]- ERROR- {err} ")
 
     @staticmethod
     def exists_by_id(db: Session, id: int) -> bool:
         try:
-            return db.query(Indicator).filter(Indicator.IndicatorID == id).first() is not None
+            return db.query(Indicators).filter(Indicators.id == id).first() is not None
 
         except Exception as err:
-            raise logger.error(f"[IndicatorRepository].[exists_by_id]- ERROR- {err} ")
+            raise logger.error(f"[IndicatorsRepository].[exists_by_id]- ERROR- {err} ")
 
     @staticmethod
     def delete(db: Session, id: int) -> None:
         try:
-            indicator = db.query(Indicator).filter(Indicator.IndicatorID == id).first()
-            if indicator is not None:
-                db.delete(indicator)
+            results = db.query(Indicators).filter(Indicators.id == id).first()
+            if Indicators is not None:
+                db.delete(results)
                 db.commit()
         except Exception as err:
-            raise logger.error(f"[IndicatorRepository].[delete_by_id]- ERROR- {err} ")
+            raise logger.error(f"[IndicatorsRepository].[delete_by_id]- ERROR- {err} ")

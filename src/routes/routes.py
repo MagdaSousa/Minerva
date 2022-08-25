@@ -9,7 +9,8 @@ from src.domains.models.country.region import Region
 from src.domains.models.country.country import Country
 from src.domains.models.period.period import Period
 from src.domains.actions.gross_domestic_product_action import GDPAction
-from src.domains.schemas.schemas import GDPCountryNameSchema, GDPFromRegion, GDPFromPeriod
+from src.domains.schemas.schemas import GDPCountryNameSchema, GDPFromRegion, GDPFromPeriod, \
+    GDPResponseSchema
 from src.utils.utils import validating_user_input_data_type, validations_per_period
 
 obj_connection = DBConnection()
@@ -26,18 +27,19 @@ def get_by_country_name():
     return {"Hello": "World"}
 
 
-@app.get("/gdp/country/{item}", response_model=GDPCountryNameSchema)
+@app.get("/gdp/country/{item}")
 def get_by_country_name(item: str, db: Session = Depends(get_db)):
     """○ Todos os dados relacionados a um país informado (indicadores e descrição,
     com exceção da coluna SpecialNotes). input: Nome ou código do país"""
+    validating_user_input_data_type(sent=item, expected=str)
     gdp = GDPAction.find_by_country_code_or_country_name(db, item)
 
-    # if not gdp:
-    #     raise HTTPException(
-    #         status_code=status.HTTP_404_NOT_FOUND, detail="Country name not found"
-    #     )
+    if not gdp:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Country name not found"
+        )
 
-    return status.HTTP_200_OK, GDPCountryNameSchema.from_orm(gdp)
+    return status.HTTP_200_OK, GDPResponseSchema(gdp).assemble_the_schematic_for_the_indicator()
 
 
 @app.get("/gdp/rate/country/{item}", response_model=GDPCountryNameSchema)
@@ -81,5 +83,3 @@ def get_by_period(intial_period: int, final_period: int, db: Session = Depends(g
             status_code=status.HTTP_404_NOT_FOUND, detail="Curso não encontrado"
         )
     return status.HTTP_200_OK, GDPFromPeriod.from_orm(gdp)
-
-
