@@ -10,7 +10,7 @@ from src.domains.models.country.country import Country
 from src.domains.models.period.period import Period
 from src.domains.actions.gross_domestic_product_action import GDPAction
 from src.domains.schemas.schemas import GDPCountryNameSchema, GDPFromRegion, GDPFromPeriod, \
-    GDPResponseSchema
+    GDPResponseSchema, GrossRateResponseSchema
 from src.utils.utils import validating_user_input_data_type, validations_per_period
 
 obj_connection = DBConnection()
@@ -20,11 +20,6 @@ get_db = obj_connection.get_db
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(docs_url='/docs/Minerva')
-
-
-@app.get("/")
-def get_by_country_name():
-    return {"Hello": "World"}
 
 
 @app.get("/gdp/country/{item}")
@@ -42,18 +37,18 @@ def get_by_country_name(item: str, db: Session = Depends(get_db)):
     return status.HTTP_200_OK, GDPResponseSchema(gdp).assemble_the_schematic_for_the_indicator()
 
 
-@app.get("/gdp/rate/country/{item}", response_model=GDPCountryNameSchema)
+@app.get("/gdp/rate/country/{item}")
 def get_growth_rate(item: str, db: Session = Depends(get_db)):
     """○ Taxa de crescimento do PIB por país. input: Nome ou código do país"""
     validating_user_input_data_type(sent=item, expected=str)
-    gdp = GDPAction.find_growth_rate(db, item)
+    gdp = GDPAction.find_growth_rate_by_code_or_country_namey(db, item)
 
     if not gdp:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Country name not found"
         )
 
-    return status.HTTP_200_OK, GDPCountryNameSchema.from_orm(gdp)
+    return status.HTTP_200_OK, GrossRateResponseSchema(gdp).formatting_growth_rate_data_by_country()
 
 
 @app.get("/gdp/region/{item}", response_model=GDPFromRegion)
