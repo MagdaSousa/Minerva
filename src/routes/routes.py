@@ -10,7 +10,7 @@ from src.domains.models.country.country import Country
 from src.domains.models.period.period import Period
 from src.domains.actions.gross_domestic_product_action import GDPAction
 from src.domains.schemas.schemas import GDPCountryNameSchema, GDPFromRegion, GDPFromPeriod, \
-    GDPResponseSchema, GrossRateResponseSchema
+    GDPResponseSchema, GrossRateResponseSchema, GrossRateByRegionSchema
 from src.utils.utils import validating_user_input_data_type, validations_per_period
 
 obj_connection = DBConnection()
@@ -53,14 +53,18 @@ def get_growth_rate(item: str, db: Session = Depends(get_db)):
 
 @app.get("/gdp/region/{item}", response_model=GDPFromRegion)
 def get_gdp_by_region(item: str, db: Session = Depends(get_db)):
+
     """○ Consulta do PIB dos países por região (ordem alfabética). input: Região"""
+
     validating_user_input_data_type(sent=item, expected=str)
+
     gdp = GDPAction.find_by_region_name(db, item)
+
     if not gdp:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Region name not found"
         )
-    return status.HTTP_200_OK, GDPFromRegion.from_orm(gdp)
+    return status.HTTP_200_OK, GrossRateByRegionSchema(gdp).formatting_growth_rate_data_by_country()
 
 
 @app.get("/gdp/rank/{intial_period}&{final_period}", response_model=GDPFromPeriod)

@@ -8,6 +8,18 @@ class GDPRepository:
     GDP -Gross Domestic Product
     """
 
+
+    @staticmethod
+    def find_by_associations_id_new(db: Session, association: int) -> GrossDomesticProduct:
+        try:
+            results = db.query(GrossDomesticProduct).filter(
+                GrossDomesticProduct.association_id == association).all()
+
+            return results
+        except Exception as err:
+            raise logger.error(f"[GrossDomesticProductRepository].[find_by_associations_id]- ERROR- {err} ")
+
+
     @staticmethod
     def find_by_associations_id(db: Session, association: int) -> GrossDomesticProduct:
         try:

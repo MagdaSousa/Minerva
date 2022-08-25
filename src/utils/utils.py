@@ -32,9 +32,11 @@ def calculate_growth_rate(dict_values):
 
 def validating_user_input_data_type(sent: Union[str, int, float], expected: Union[str, int]):
     logger.info(f"[Validations].[validating_user_input_data_type]")
+
     number_pattern = re.compile('^[0-9]+$')
-    string_pattern = re.compile('^[a-zA-Z]+$')
-    if expected == str and not re.search(string_pattern, str(sent)):
+    # string_pattern = re.compile('^[a-zA-Z]+$')
+
+    if expected == str and not str(sent).replace(" ", "").isalpha():
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail=f"{ValueWithInvalidTypeException(sent)}"
         )

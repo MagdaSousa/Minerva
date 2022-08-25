@@ -14,12 +14,15 @@ obj_country = CountryAction
 obj_association = AssociationAction
 obj_indicators = IndicatorsAction
 obj_income_groups = IncomeGroupsAction
-obj_regions=RegionAction
+obj_regions = RegionAction
+
 
 class GDPAction:
     """
     GDP -Gross Domestic Product
     """
+
+
 
     @staticmethod
     def find_by_country_code_or_country_name(db: Session, item: str) -> [GDPRepository, CountryRepository, Indicators]:
@@ -59,31 +62,27 @@ class GDPAction:
                 return [gdp, country_infos]
 
             except Exception as err:
-                raise logger.error(f"[GDPAction].[find_by_country_code_or_country_name]- ERROR- {err} ")
+                raise logger.error(f" Running [GDPAction].[find_by_country_code_or_country_name]- ERROR- {err} ")
         except Exception as err:
-            raise logger.error(f"[GDPAction].[find_growth_rate]- ERROR- {err} ")
+            raise logger.error(f" Running [GDPAction].[find_growth_rate]- ERROR- {err} ")
 
     @staticmethod
     def find_by_region_name(db: Session, name: str) -> GDPRepository:
-
+        gdp_by_country = []
         try:
-            #virão váriso registros tenho que pegar todos
+
             regions_infos = obj_regions.find_by_region_name(db, name)
-            country_infos = obj_country.find_by_region_id(db, regions_infos.id)
 
-            association_infos = obj_association.find_by_country_id(db, country_infos.id)
+            country_infos_list = obj_country.find_by_region_id(db, regions_infos.id)
 
-            indicators_infos = obj_indicators.find_by_indicator_id(db, association_infos.indicators_id)
-            income_infos = obj_income_groups.find_by_income_groups_id(db, country_infos.income_group_id)
+            for country_infos in country_infos_list:
+                gdp_by_country.append(GDPRepository.find_by_associations_id_new(db, country_infos.indicator_country_fk[0].id))
 
-            gdp = GDPRepository.find_by_associations_id(db, association_infos.id)
+            logger.info(f"Running [GDPAction].[find_by_region_name] ")
 
-
-            gdp = GDPRepository.find_gdp_by_region_name(db, regions_infos.id)
-            logger.info(f"[GDPAction].[find_by_region_name]- GDP- {gdp} ")
-            return gdp
+            return [regions_infos,gdp_by_country,country_infos_list]
         except Exception as err:
-            raise logger.error(f"[GDPAction].[find_by_region_name]- ERROR- {err} ")
+            raise logger.error(f" Running [GDPAction].[find_by_region_name]- ERROR- {err} ")
 
     @staticmethod
     def find_average_gdp_by_country(db: Session, intial_period: int, final_period: int) -> GDPRepository:
@@ -93,4 +92,4 @@ class GDPAction:
 
             return gdp
         except Exception as err:
-            raise logger.error(f"[GDPAction].[find_by_region_name]- ERROR- {err} ")
+            raise logger.error(f" Running [GDPAction].[find_by_region_name]- ERROR- {err} ")

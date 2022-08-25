@@ -3,7 +3,6 @@ from src.database.database import Base, Column, Integer, String, relationship, F
 from pydantic import validator
 
 
-
 class Region(Base):
     __tablename__ = TablesNames.region.value
 

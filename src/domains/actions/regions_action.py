@@ -11,12 +11,11 @@ class RegionAction:
     """
 
     @staticmethod
-    def find_by_region_name(db: Session, id: int) -> RegionRepository:
+    def find_by_region_name(db: Session, name: str) -> RegionRepository:
         try:
 
-             regions_info = obj_regions.find_by_egion_name(db, id)
+            regions_info = obj_regions.find_by_region_name(db, name)
 
-             return regions_info
+            return regions_info
         except Exception as err:
             raise logger.error(f"[RegionAction].[find_by_region_name]- ERROR- {err} ")
-
