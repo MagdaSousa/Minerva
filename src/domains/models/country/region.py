@@ -10,7 +10,6 @@ class Region(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     region_name = Column(String(50), nullable=False)
 
-    #country_region_fk = relationship("Country", foreign_keys="Country.id")
     country_region_fk = relationship("Country", back_populates="region_country_fk")
 
     @validator('region_name')

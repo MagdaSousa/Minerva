@@ -8,8 +8,12 @@ from loguru import logger
 from typing import Union
 
 
-def calculate_growth_rate(gdp):
+def calculate_growth_rate(dict_values):
     """calcular taxa de crescimento"""
+    ordered_list = sorted(dict_values):
+
+
+    growth_rate =  ((current_value – previous_years_value) / previous_years_value) * 100
     pass
 
 
