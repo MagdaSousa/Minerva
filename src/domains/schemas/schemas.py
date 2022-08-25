@@ -74,7 +74,7 @@ class GrossRateByRegionSchema:
 
             dict_region[country.country_name] = {"GDP growth annual %": [dict_values_indicators]}
 
-        return {dict_region}
+        return dict_region
 
 
 class GDPResponseSchema2(BaseModel):

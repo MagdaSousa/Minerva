@@ -51,7 +51,7 @@ def get_growth_rate(item: str, db: Session = Depends(get_db)):
     return status.HTTP_200_OK, GrossRateResponseSchema(gdp).formatting_growth_rate_data_by_country()
 
 
-@app.get("/gdp/region/{item}", response_model=GDPFromRegion)
+@app.get("/gdp/region/{item}")
 def get_gdp_by_region(item: str, db: Session = Depends(get_db)):
 
     """○ Consulta do PIB dos países por região (ordem alfabética). input: Região"""
