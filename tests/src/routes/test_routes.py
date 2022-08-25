@@ -9,7 +9,7 @@ class TestApi:
     def my_second_override(self):
         return {"another": "override"}
 
-    def test_get_country_by_code(self, fastapi_dep, response_api):
+    def test_gshould_return_a_json_with_the_data_of_the_queried_city_code(self, fastapi_dep, response_api):
         with fastapi_dep(app).override(
                 {
                     get_db: get_db
@@ -20,7 +20,7 @@ class TestApi:
             assert response.status_code == 200
             assert response.json() == response_api
 
-    def test_get_country_by_name(self, fastapi_dep, response_api):
+    def test_gshould_return_a_json_with_the_data_of_the_queried_city(self, fastapi_dep, response_api):
         with fastapi_dep(app).override(
                 {
                     get_db: get_db
@@ -31,7 +31,8 @@ class TestApi:
             assert response.status_code == 200
             assert response.json() == response_api
 
-    def test_get_country_by_name_error(self, fastapi_dep):
+
+    def test_should_return_an_exception_on_receiving_an_unexpected_type(self, fastapi_dep):
         with fastapi_dep(app).override(
                 {
                     get_db: get_db
@@ -42,65 +43,25 @@ class TestApi:
             assert response.status_code == 400
             assert response.json() == {'detail': '1 is not a string'}
 
-    def test_get_country_by_code_error(self, fastapi_dep):
+    def test_should_return_an_exception_when_receiving_an_unregistered_country(self, fastapi_dep):
         with fastapi_dep(app).override(
                 {
                     get_db: get_db
                 }
         ):
-            invalid_value = 1
+            invalid_value = 'invalid country'
             response = client.get(f"/gdp/country/{invalid_value}")
             assert response.status_code == 400
-            assert response.json() == {'detail': '1 is not a string'}
+            assert response.json() == {'detail': 'invalid country is not a string'}
 
-    def test_get_rate_by_country(self, fastapi_dep):
+    def test_should_return_an_exception_when_receiving_an_unregistered_code(self, fastapi_dep):
         with fastapi_dep(app).override(
                 {
-                    get_db: "plain_override_object"
+                    get_db: get_db
                 }
         ):
-            response = client.get(f"/gdp/rate/country/{item}")
+            invalid_value = 'JJJ'
+            response = client.get(f"/gdp/country/{invalid_value}")
             assert response.status_code == 400
-            assert response.json() == {
-                "first_dep": "plain_override_object",
-                "second_dep": {"another": "override"},
-            }
+            assert response.json() == {'detail': 'invalid country is not a string'}
 
-    def test_get_rate_by_country_error(self, fastapi_dep):
-        with fastapi_dep(app).override(
-                {
-                    get_db: "plain_override_object"
-                }
-        ):
-            response = client.get(f"/gdp/rate/country/{item}")
-            assert response.status_code == 404
-            assert response.json() == {
-                "first_dep": "plain_override_object",
-                "second_dep": {"another": "override"},
-            }
-
-    def test_get_region(self, fastapi_dep):
-        with fastapi_dep(app).override(
-                {
-                    get_db: "plain_override_object"
-                }
-        ):
-            response = client.get(f"/gdp/region/{item}")
-            assert response.status_code == 404
-            assert response.json() == {
-                "first_dep": "plain_override_object",
-                "second_dep": {"another": "override"},
-            }
-
-    def test_get_region_error(self, fastapi_dep):
-        with fastapi_dep(app).override(
-                {
-                    get_db: "plain_override_object"
-                }
-        ):
-            response = client.get(f"/gdp/region/{item}")
-            assert response.status_code == 404
-            assert response.json() == {
-                "first_dep": "plain_override_object",
-                "second_dep": {"another": "override"},
-            }
