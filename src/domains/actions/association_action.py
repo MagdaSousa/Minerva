@@ -27,3 +27,13 @@ class AssociationAction:
             return indicators_id
         except Exception as err:
             raise logger.error(f"[GDPAction].[find_by_country_code_or_country_name]- ERROR- {err} ")
+
+    @staticmethod
+    def find_by_country_ids(db: Session, id: int) -> AssociationRepository:
+        try:
+
+            indicators_id = AssociationRepository.find_by_indicators_id(db, id)
+
+            return indicators_id
+        except Exception as err:
+            raise logger.error(f"[GDPAction].[find_by_country_code_or_country_name]- ERROR- {err} ")

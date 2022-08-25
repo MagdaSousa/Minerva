@@ -13,7 +13,7 @@ class PeriodRepository:
 
             return results
         except Exception as err:
-            raise logger.error(f"[GrossDomesticProductRepository].[find_by_id]- ERROR- {err} ")
+            raise logger.error(f"[PeriodRepository].[find_by_period]- ERROR- {err} ")
 
     @staticmethod
     def exists_by_period(db: Session, intial_period: int, final_period: int) -> bool:
@@ -22,4 +22,4 @@ class PeriodRepository:
                 Period.research_year == intial_period and Period.research_year == final_period).first() is not None
 
         except Exception as err:
-            raise logger.error(f"[GrossDomesticProductRepository].[exists_by_id]- ERROR- {err} ")
+            raise logger.error(f"[PeriodRepository].[exists_by_period]- ERROR- {err} ")

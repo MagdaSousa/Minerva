@@ -2,16 +2,19 @@ from sqlalchemy.orm import Session
 from src.domains.actions.association_action import AssociationAction
 from src.domains.actions.country_action import CountryAction
 from src.domains.actions.indicators_action import IndicatorsAction
+from src.domains.actions.regions_action import RegionAction
 from src.domains.repository.indicator_repository.cross_domestic_product_repository import GDPRepository
 from src.domains.repository.indicator_repository.indicator_repository import Indicators
 from src.domains.repository.country_repository.country_repopsitory import CountryRepository
 from src.domains.actions.income_groups_actions import IncomeGroupsAction
+
 from loguru import logger
 
 obj_country = CountryAction
 obj_association = AssociationAction
 obj_indicators = IndicatorsAction
 obj_income_groups = IncomeGroupsAction
+obj_regions=RegionAction
 
 class GDPAction:
     """
@@ -64,8 +67,19 @@ class GDPAction:
     def find_by_region_name(db: Session, name: str) -> GDPRepository:
 
         try:
+            #virão váriso registros tenho que pegar todos
+            regions_infos = obj_regions.find_by_region_name(db, name)
+            country_infos = obj_country.find_by_region_id(db, regions_infos.id)
 
-            gdp = GDPRepository.find_gdp_by_region_name(db, name)
+            association_infos = obj_association.find_by_country_id(db, country_infos.id)
+
+            indicators_infos = obj_indicators.find_by_indicator_id(db, association_infos.indicators_id)
+            income_infos = obj_income_groups.find_by_income_groups_id(db, country_infos.income_group_id)
+
+            gdp = GDPRepository.find_by_associations_id(db, association_infos.id)
+
+
+            gdp = GDPRepository.find_gdp_by_region_name(db, regions_infos.id)
             logger.info(f"[GDPAction].[find_by_region_name]- GDP- {gdp} ")
             return gdp
         except Exception as err:

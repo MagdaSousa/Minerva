@@ -27,7 +27,7 @@ class GDPResponseSchema:
 
         return {"country_name": country.country_name,
                 "country_code": country.country_code,
-                "income_groups": income_groups.country_code,
+                "income_groups": income_groups.income_level,
                 "region_name": country.region_country_fk.region_name,
                 "indicator_name": indicators[0].indicator_name,
                 "list_values_indicators": [dict_values_indicators]}

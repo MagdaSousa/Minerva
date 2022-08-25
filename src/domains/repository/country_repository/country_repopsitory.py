@@ -13,24 +13,12 @@ class CountryRepository:
             raise logger.error(f"[CountryRepository].[find_all]- ERROR- {err} ")
 
     @staticmethod
-    def save(db: Session, country: Country) -> Country:
+    def find_by_region_id(db: Session, id: int) -> Country:
         try:
-            if country.id:
-                db.merge(country)
-            else:
-                db.add(country)
-            db.commit()
-            return country
-
+            results = db.query(Country).filter(Country.region_id == id).all()
+            return results
         except Exception as err:
-            raise logger.error(f"[CountryRepository].[save]- ERROR- {err} ")
-
-    @staticmethod
-    def find_by_id(db: Session, id: int) -> Country:
-        try:
-            return db.query(Country).filter(Country.countryID == id).first()
-        except Exception as err:
-            raise logger.error(f"[CountryRepository].[find_by_id]- ERROR- {err} ")
+            raise logger.error(f"[CountryRepository].[find_by_region_id]- ERROR- {err} ")
 
     @staticmethod
     def find_by_country_code(db: Session, code: str) -> Country:
