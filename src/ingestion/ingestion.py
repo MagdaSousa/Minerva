@@ -11,17 +11,17 @@ from src.domains.models.period.period import Period
 
 
 class IngestionInPostgres:
-    def __init__(self, df_merge):
+    def __init__(self , df_merge,db:DBConnection):
         self.df_merge = df_merge
         self.insert = insert
-        self.db = DBConnection()
+        self.db = db
         self.engine = self.db.engine
         self.regions = self.df_merge.drop_duplicates(subset=['Region'])
         self.income_groups = self.df_merge.drop_duplicates(subset=['IncomeGroup'])
         self.indicators = self.df_merge[['Indicator Name', 'Indicator Code']].drop_duplicates()
         self.period_list = {}
 
-    def delelte_date(self):
+    def delete_date(self):
 
         self.db.delete_executor(GrossDomesticProduct)
         self.db.delete_executor(Association)
@@ -40,9 +40,8 @@ class IngestionInPostgres:
 
     def iterate_in_rows_to_ingestion(self):
         try:
-            self.delelte_date()
+            self.delete_date()
             self.ingestion_data_in_imutable_data()
-            # self.df_merge.fillna('inexistente', inplace=True)
             for index, row in self.df_merge.iterrows():
                 count = index + 1
 
@@ -59,7 +58,6 @@ class IngestionInPostgres:
             if column.isnumeric() and not None:
                 self.db.insert_executor(Period, {"id": pk, "research_year": int(column)})
                 self.period_list[column] = pk
-                # self.df_merge['PeriodId'] = self.df_merge['Period'].map({int(column): pk})
                 pk += 1
 
     def ingestion_country_table_bach(self, row, pk):

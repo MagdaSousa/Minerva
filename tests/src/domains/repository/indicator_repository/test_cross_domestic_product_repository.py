@@ -1,5 +1,5 @@
 from src.domains.models.indicators.Gross_domestic_product import GrossDomesticProduct
-from src.domains.repository.indicator_repository.cross_domestic_product_repository import GDPRepository, Session
+from src.domains.repository.indicator_repository.gross_domestic_product_repository import GDPRepository, Session
 from src.routes.routes import app, get_db
 from fastapi.testclient import TestClient
 import requests

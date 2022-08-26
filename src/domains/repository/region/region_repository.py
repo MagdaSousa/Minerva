@@ -14,3 +14,12 @@ class RegionRepository:
         except Exception as err:
             raise logger.error(f"[RegionRepository].[find_by_region_name]- ERROR- {err} ")
 
+    @staticmethod
+    def find_all_regions_names(db: Session) -> [Region]:
+        try:
+            results = db.query(Region).all()
+
+            return results
+        except Exception as err:
+            raise logger.error(f"[RegionRepository].[find_all_regions_names]- ERROR- {err} ")
+

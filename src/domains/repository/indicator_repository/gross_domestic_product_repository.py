@@ -8,7 +8,6 @@ class GDPRepository:
     GDP -Gross Domestic Product
     """
 
-
     @staticmethod
     def find_by_associations_id_new(db: Session, association: int) -> GrossDomesticProduct:
         try:
@@ -19,6 +18,19 @@ class GDPRepository:
         except Exception as err:
             raise logger.error(f"[GrossDomesticProductRepository].[find_by_associations_id]- ERROR- {err} ")
 
+    @staticmethod
+    def find_by_associations_id_and_period(db: Session, period_list: list) -> GrossDomesticProduct:
+        try:
+            # results = db.query(GrossDomesticProduct.association_id,sum(GrossDomesticProduct.value_per_period)).filter(GrossDomesticProduct.period_id.in_(period_list)).groupby(GrossDomesticProduct.association_id)
+
+            from sqlalchemy.sql import func
+            results = db.query(GrossDomesticProduct.association_id, func.avg(GrossDomesticProduct.value_per_period)
+                               .label('average')).filter(GrossDomesticProduct.period_id.in_(period_list)) \
+                .group_by(GrossDomesticProduct.association_id).all()
+
+            return results
+        except Exception as err:
+            raise logger.error(f"[GrossDomesticProductRepository].[find_by_associations_id]- ERROR- {err} ")
 
     @staticmethod
     def find_by_associations_id(db: Session, association: int) -> GrossDomesticProduct:
@@ -46,21 +58,12 @@ class GDPRepository:
             raise logger.error(f"[GrossDomesticProductRepository].[find_by_id]- ERROR- {err} ")
 
     @staticmethod
-    def find_all(db: Session) -> list:
+    def find_by_period_id(db: Session, period_list: list) -> GrossDomesticProduct:
         try:
-            return db.query(GrossDomesticProduct).all()
 
+            results = db.query(GrossDomesticProduct.association_id, sum(GrossDomesticProduct.value_per_period)).filter(
+                GrossDomesticProduct.period_id.in_(period_list)).Groupby(GrossDomesticProduct.association_id).all()
+
+            return results
         except Exception as err:
-            raise logger.error(f"[GrossDomesticProductRepository].[find_all]- ERROR- {err} ")
-
-
-
-    @staticmethod
-    def exists_by_code(db: Session, id: int) -> bool:
-        try:
-            return db.query(GrossDomesticProduct).filter(GrossDomesticProduct.GrossDomesticProductID == id).first() is not None
-
-        except Exception as err:
-            raise logger.error(f"[GrossDomesticProductRepository].[exists_by_id]- ERROR- {err} ")
-
-
+            raise logger.error(f"[GrossDomesticProductRepository].[find_by_period_id]- ERROR- {err} ")

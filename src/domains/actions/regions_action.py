@@ -19,3 +19,13 @@ class RegionAction:
             return regions_info
         except Exception as err:
             raise logger.error(f"[RegionAction].[find_by_region_name]- ERROR- {err} ")
+
+    @staticmethod
+    def find_regions(db: Session) ->[RegionRepository] :
+        try:
+
+            regions_info = obj_regions.find_all_regions_names(db)
+
+            return regions_info
+        except Exception as err:
+            raise logger.error(f"[RegionAction].[find_by_region_name]- ERROR- {err} ")

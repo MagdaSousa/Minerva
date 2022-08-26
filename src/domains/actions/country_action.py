@@ -30,3 +30,11 @@ class CountryAction:
             return CountryRepository.find_by_region_id(db, id)
         except Exception as err:
             raise logger.error(f"[CountryAction].[find_by_region_id]- ERROR- {err} ")
+
+    @staticmethod
+    def find_by_country_id(db: Session, id: int) -> [CountryRepository]:
+        try:
+
+            return CountryRepository.find_by_country_id(db, id)
+        except Exception as err:
+            raise logger.error(f"[CountryAction].[find_by_country_id]- ERROR- {err} ")

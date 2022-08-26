@@ -1,8 +1,5 @@
 import uvicorn
-from src.routes.routes import app
-from pathlib import Path
-#     # f"{Path(__file__).stem}
-
+from src.routes.routes import app, obj_connection
 if __name__ == "__main__":
     config = uvicorn.Config("main:app",
                             host="127.0.0.1",

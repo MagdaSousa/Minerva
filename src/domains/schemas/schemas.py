@@ -1,4 +1,42 @@
 from pydantic import BaseModel
+import statistics as st
+from operator import itemgetter
+import pandas as pd
+from loguru import logger
+
+
+class GDPResponseSchema2(BaseModel):
+    country_name: str
+    country_code: str
+    income_groups: str
+    region_name: str
+    indicator_name: str
+    list_values_indicators: list
+
+
+class GDPCountryNameSchema(BaseModel):
+    country_name: str
+    country_code: str
+    region_name: str
+
+
+class GDPInfosSchema(BaseModel):
+    id: int
+    value_per_period: float
+    association_id: int
+    period_id: int
+
+
+class GDPFromRegion(BaseModel):
+    gdp_external_id: str
+    country_name: int
+    value: float
+
+
+class GDPFromPeriod(BaseModel):
+    gdp_external_id: str
+    country_name: int
+    value: float
 
 
 # Actions
@@ -58,53 +96,34 @@ class GrossRateByRegionSchema:
     def formatting_growth_rate_data_by_country(self):
         dict_values_indicators = {}
         dict_region = {}
+        list_grouth_by_region = []
         regions_infos = self.data[0]
         gdp_by_country = self.data[1]
         country_infos = self.data[2]
 
         dict_region["Region"] = regions_infos.region_name
 
-        for country, gpd in zip(country_infos,gdp_by_country):
+        for country, gpd in zip(country_infos, gdp_by_country):
             for fields in gpd:
+
                 if str(fields.value_per_period) == 'nan':
                     values_per_period = 0
                 else:
                     values_per_period = round(fields.value_per_period, 2)
                 dict_values_indicators[fields.gdp_period_fk.research_year] = f"{round(values_per_period)} %"
+            list_grouth_by_region.append(dict_values_indicators)
 
-            dict_region[country.country_name] = {"GDP growth annual %": [dict_values_indicators]}
+            dict_region[country.country_name] = {"GDP growth annual %": list_grouth_by_region}
+            list_grouth_by_region = []
+            dict_values_indicators = {}
 
         return dict_region
 
 
-class GDPResponseSchema2(BaseModel):
-    country_name: str
-    country_code: str
-    region_name: str
-    indicator_name: str
-    list_values_indicators: list
+class PeriodRangeMedianSchema:
+    def __init__(self, data):
+        self.data = data
 
-
-class GDPCountryNameSchema(BaseModel):
-    country_name: str
-    country_code: str
-    region_name: str
-
-
-class GDPInfosSchema(BaseModel):
-    id: int
-    value_per_period: float
-    association_id: int
-    period_id: int
-
-
-class GDPFromRegion(BaseModel):
-    gdp_external_id: str
-    country_name: int
-    value: float
-
-
-class GDPFromPeriod(BaseModel):
-    gdp_external_id: str
-    country_name: int
-    value: float
+    def calculate_the_average_GDP_rate_by_country(self):
+        df = pd.DataFrame(self.data, columns=['Country_name', 'avarage', 'country_id', 'association_id'])
+        return {"highest average": df.nlargest(10, 'avarage')[['Country_name', 'avarage']].to_dict()}
