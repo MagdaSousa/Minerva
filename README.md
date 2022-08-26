@@ -52,14 +52,21 @@ Com o repositório clonado/baixado, você deverá gerar a imagem docker do proje
 
 Ao rodar o comando anterior, será gerada uma imagem docker do banco de dados e também irá iniciar a aplicação...
 
-## Observações:
+# Observações:
 Ao rodar o docker e iniciar o banco de dados e a aplicação, o banco inicialmente está vazio, apenas com as tabelas, neste projeto foi criado uma rota específica para o carregamento dos dados, a qual deve ser a primeira a ser carregada, para que o banco seja populado.Foi escolhido ess processo, para demonstrar como seria o processo de ingestão de dados de uma fonte extena( no caso o excel), que foi processado e modelado usando o pandas e ingetado no banco de dados, seguindo a seguinte modelagem :[repos] (https://github.com/MagdaSousa/Minerva/wiki/Modelagem)
 
 # Rodando o projeto
 Após rodar o comando docker, o banco será criado e a aplicação levantada, como na imagem abaixo:
 ![image](https://user-images.githubusercontent.com/55951781/186996725-091f4e70-2431-4797-808c-1bcb7d199835.png)
 
-#Acessando a api para popuar o banco de dados:
+# Acessando a api para popular o banco de dados:
+
+Como citei anteriormente, vou mostrar como testar a plicação no Insominia e no Swagger que é disponibilizado pelo FastAPI
+
+
+tedtando via Insominia- Passo a passo: [repos] (https://github.com/MagdaSousa/Minerva/wiki/Modelagem)
+
+edtando via Swagger - Passo a passo: [repos] (https://github.com/MagdaSousa/Minerva/wiki/Modelagem)
 
 
 
@@ -69,63 +76,105 @@ Após rodar o comando docker, o banco será criado e a aplicação levantada, co
 
 Este projeto consiste em uma aplicação de backend, a qual não possui uma rota raiz (/) atualmente, possuindo apenas 3 estruturas de rotas, conforme a necessidade do usuário:
 
-• accounts: Referente aos dados de conta, gerais e individuais. E a partir do ID do usuário que será possível acessar o saldo da conta através das rotas (/accounts/balancce) e uma listagem de contas gerais (/accounts). Além disso, é possível se fazer nessa rota o login do usuário em questão (/accounts/login)
+• common: Referente aos dados de conta, gerais e individuais. E a partir do ID do usuário que será possível acessar o saldo da conta através das rotas (/accounts/balancce) e uma listagem de contas gerais (/accounts). Além disso, é possível se fazer nessa rota o login do usuário em questão (/accounts/login)
 
 • transfers: Rota responsável pelas ações de transfêrencia entre duas contas, só sendo permitido realizar as mesmas quando realizado previamente um login. Deverá obrigatoriamente enviar um token no header das requisições.
 
 # EndPoints
 
-Segue abaixo rotas principais liberadas atualmente no projeto:
 
 ## Accounts
 
 ### Request  
-` "GET /accounts" : Rota que retorna a listagem de contas cadastradas.`
+` "POST" : Rota que faz a carga dos dados no postgre
 
 ### Response  
-`[
-  {
-		"id": "abc7cf9f-b984-4d0c-9dfa-8c89eaf1bfb0",
-		"name": "Joselino das Neves",
-		"cpf": "74202445023",
-		"balance": 99.99,
-		"created_at": "2022-01-18T17:28:53Z"
-	},
-  {
-	"id": "7b17f816-ef30-4096-95ef-c6118068ade1",
-	"name": "João",
-	"cpf": "34760400036",
-	"balance": 99.99,
-	"created_at": "2022-01-21T13:12:41Z"
-  }
+Neste caso não só retorna o código 200, ao finalizar o processo de ingestão dos dados
+`[200
 ]`
  
 ---
 
 ### Request
-` "POST /account" : Rota para a criação do usuário`
+` "GET  http://127.0.0.1:8000/gdp/rate/<nome_pais>" : `
 
-- Body (JSON)
-`{
-	"name":"João",
-	"cpf":"347.604.000-36",
-	"secret":"12344",
-	"balance":9999
-}`
----
 ### Response
-`  {
-	"id": "7b17f816-ef30-4096-95ef-c6118068ade1",
-	"name": "João",
-	"cpf": "34760400036",
-	"balance": 99.99,
-	"created_at": "2022-01-21T13:12:41Z"
-}`
+`  [
+	200,
+	{
+		"country_name": "Aruba",
+		"country_code": "ABW",
+		"GDP growth annual %": [
+			{
+				"1960": "0 %",
+				"1961": "0 %",
+				"1962": "0 %",
+				"1963": "0 %",
+				"1964": "0 %",
+				"1965": "0 %",
+				"1966": "0 %",
+				"1967": "0 %",
+				"1968": "0 %",
+				"1969": "0 %",
+				"1970": "0 %",
+				"1971": "0 %",
+				"1972": "0 %",
+				"1973": "0 %",
+				"1974": "0 %",
+				"1975": "0 %",
+				"1976": "0 %",
+				"1977": "0 %",
+				"1978": "0 %",
+				"1979": "0 %",
+				"1980": "0 %",
+				"1981": "0 %",
+				"1982": "0 %",
+				"1983": "0 %",
+				"1984": "0 %",
+				"1985": "0 %",
+				"1986": "0 %",
+				"1987": "16 %",
+				"1988": "19 %",
+				"1989": "12 %",
+				"1990": "4 %",
+				"1991": "8 %",
+				"1992": "6 %",
+				"1993": "7 %",
+				"1994": "8 %",
+				"1995": "3 %",
+				"1996": "1 %",
+				"1997": "7 %",
+				"1998": "2 %",
+				"1999": "1 %",
+				"2000": "8 %",
+				"2001": "4 %",
+				"2002": "-1 %",
+				"2003": "1 %",
+				"2004": "7 %",
+				"2005": "0 %",
+				"2006": "1 %",
+				"2007": "3 %",
+				"2008": "2 %",
+				"2009": "-12 %",
+				"2010": "-3 %",
+				"2011": "3 %",
+				"2012": "-1 %",
+				"2013": "6 %",
+				"2014": "0 %",
+				"2015": "4 %",
+				"2016": "2 %",
+				"2017": "5 %",
+				"2018": "1 %",
+				"2019": "-2 %",
+				"2020": "-22 %",
+				"2021": "0 %"
+			}
+		]`
 
 
-## Balance
+
 ### Request
-` "GET /account/balance" : Rota validar o saldo atual da conta, deve-se passar o token de acesso, recebido ao logar`
+` "GET [/account/balance](http://127.0.0.1:8000/gdp/rate/country/<codigo_ou_nome_do_pais>)" : Rota validar o saldo atual da conta, deve-se passar o token de acesso, recebido ao logar`
 
 - Header 
 `{
