@@ -29,19 +29,22 @@ Nesta aplicação o banco de dados está sendo disponibilizado via imagem docker
 
 Baixar o repositório do git diretamente, basta executar o comando abaixo no cmd :
 
- ``` git clone https://github.com/VitorinoAssuncao/hadesBanking.git ```
+ ``` https://github.com/MagdaSousa/Minerva.git ```
  
  Caso queira via CLI do github, basta usar a opção abaixo:
  
 GitHub CLI
  
- ``` gh repo clone VitorinoAssuncao/hadesBanking ```
+ ``` gh repo clone MagdaSousa/Minerva ```
+ 
+ ![image](https://user-images.githubusercontent.com/55951781/187002012-ab3bca16-4240-4677-b4b6-d117b3e6ca76.png)
+
 
 
 # Gerando Imagem Docker:
 Antes de inciar a criação da imagem, vc precisa criar um arquivo .env, na raiz do seu projeto, com as seguintes configuraçõeds, elas são necessárias para que a imagem e o banco do docker sejam criados corretamente:
 
-As enviromentes, descritas no arquivos devem estar exatamente iguais ao exemplo, pois no arquivo no docker-compose está apontando para essas enviroments, então certifique-se que esteja tudo correto, segue um arquivo de exemplo, já montado:
+As enviromentes, descritas no arquivos devem estar exatamente iguais ao exemplo, pois no arquivo no docker-compose está apontando para essas enviroments, então certifique-se que esteja tudo correto, segue um arquivo de exemplo, já montado:[env]https://github.com/MagdaSousa/Minerva/wiki/criar-um-arquivo-.env,-na-raiz-do-projeto-com-esse-conteudo-abaixo:)
 
 
 ![aruivo env](https://user-images.githubusercontent.com/55951781/187001650-26b3edd7-e828-4f1a-92f7-737328c3606f.jpg)
