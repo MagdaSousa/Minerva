@@ -39,6 +39,15 @@ GitHub CLI
 
 
 # Gerando Imagem Docker:
+Antes de inciar a criação da imagem, vc precisa criar um arquivo .env, na raiz do seu projeto, com as seguintes configuraçõeds, elas são necessárias para que a imagem e o banco do docker sejam criados corretamente:
+
+As enviromentes, descritas no arquivos devem estar exatamente iguais ao exemplo, pois no arquivo no docker-compose está apontando para essas enviroments, então certifique-se que esteja tudo correto, segue um arquivo de exemplo, já montado:
+
+
+![aruivo env](https://user-images.githubusercontent.com/55951781/187001650-26b3edd7-e828-4f1a-92f7-737328c3606f.jpg)
+
+
+
 Com o repositório clonado/baixado, você deverá gerar a imagem docker do projeto, pois tando o banco de dados como a aplicação são orquestrados pelo docker, segue o passo a passo:
 
  Acesse o terminal e rode o comendo abaixo o comando abaixo:
