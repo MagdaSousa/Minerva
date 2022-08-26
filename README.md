@@ -1,6 +1,9 @@
 # Peojeto: Minerva
 
-Foobar is a Python library for dealing with word pluralization.
+O projeto minerva visa disponibilizar dados relacionados a taxa de crescimento percentual anual do PIB, via API.
+
+
+#Instalação:
 
 ## Clonar repositório:
 
@@ -11,11 +14,11 @@ git clone https://github.com/MagdaSousa/Minerva.git
 
 
 
-## Installation
+## Docker
 Com o repositório clonado em sua máquina, você deve rodar o seguinte comando no cmd.
 
 ```bash
-docker-compose up
+docker-compose up --build
 ```
 
 ## Usage
@@ -37,18 +40,30 @@ Insominia: (https://insomnia.rest/download)
 
 
 ## EndPoints disponíveis:
-```python
-GET http://127.0.0.1:8000/gdp/rate/country/{value
-
-# returns 'words'
-foobar.pluralize('word')
-
-# returns 'geese'
-foobar.pluralize('goose')
-
-# returns 'phenomenon'
-foobar.singularize('phenomena')
+POST- Para carregamento dos dados no sql server
+```bash
+http://127.0.0.1:8000/
 ```
+
+GET - Para coletar todas as infos relacionadas a uma cidade:
+```bash
+ http://127.0.0.1:8000/gdp/rate/country/{value}
+```
+GET -taxa de crescimento por país ou codigo do país:
+```bash
+http://127.0.0.1:8000/gdp/rate/country/ABW
+```
+GET -Ranking dos 10 países (Nome e código) com maior e menor média de
+    crescimento do PIB (GDP growth annual ) com o período sendo fornecido
+    como parâmetro na API:
+```bash
+http://127.0.0.1:9000/gdp/rank/1989&1990
+```
+;
+
+# Inforamações adicionais:
+
+Ao rodar o docker, os dados dos arquivos csv, já serão inseridos automaticamente
 
 ## Documentação do projeto:
 - Estrutura do repositório : [repos] (https://github.com/MagdaSousa/Minerva/wiki/Estrutura-do-Reposit%C3%B3rio)
