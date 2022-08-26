@@ -1,6 +1,6 @@
 
+import re
+teste ="masmdf12525md &"
+string_nova = re.sub(u'[^a-zA-Z0-9áéíóúÁÉÍÓÚâêîôÂÊÎÔãõÃÕçÇ: ]', '', teste)
 
-# teste =123
-#
-# if teste.replace(" ", "").isalpha():
-#     print("oi")
+print(string_nova)

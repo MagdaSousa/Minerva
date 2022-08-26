@@ -12,7 +12,7 @@ class TestApi:
     def test_gshould_return_a_json_with_the_data_of_the_queried_city_code(self, fastapi_dep, response_api):
         with fastapi_dep(app).override(
                 {
-                    get_db: get_db
+                    get_db: get_db()
                 }
         ):
             country_code = 'UKR'
@@ -23,7 +23,7 @@ class TestApi:
     def test_gshould_return_a_json_with_the_data_of_the_queried_city(self, fastapi_dep, response_api):
         with fastapi_dep(app).override(
                 {
-                    get_db: get_db
+                    get_db: get_db()
                 }
         ):
             country_name = 'Ukraine'
@@ -120,3 +120,26 @@ class TestApi:
             response = client.get(f"gdp/rate/country/{invalid_value}")
             assert response.status_code == 400
             assert response.json() == {'detail': 'invalid country is not a string'}
+
+    # By region
+
+    def test_gshould_return_region(self, fastapi_dep, response_api):
+        with fastapi_dep(app).override(
+                {
+                    get_db: get_db
+                }
+        ):
+            region_name = 'Latin America & Caribbean'
+            response = client.get(f"gdp/region/{region_name}")
+            assert response.status_code == 200
+
+    def test_should_return_an_exception_on_receiving_an_unexpected_type_region(self, fastapi_dep):
+        with fastapi_dep(app).override(
+                {
+                    get_db: get_db
+                }
+        ):
+            invalid_region_name = 1
+            response = client.get(f"gdp/region/{invalid_region_name}")
+            assert response.status_code == 400
+            assert response.json() == {'detail': '1 is not a string'}

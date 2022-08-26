@@ -34,9 +34,9 @@ def validating_user_input_data_type(sent: Union[str, int, float], expected: Unio
     logger.info(f"[Validations].[validating_user_input_data_type]")
 
     number_pattern = re.compile('^[0-9]+$')
-    # string_pattern = re.compile('^[a-zA-Z]+$')
+    string_pattern = re.sub(u'[^a-zA-Z0-9áéíóúÁÉÍÓÚâêîôÂÊÎÔãõÃÕçÇ: ]', '', str(sent))
 
-    if expected == str and not str(sent).replace(" ", "").isalpha():
+    if expected == str and not string_pattern.replace(" ", "").isalpha():
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail=f"{ValueWithInvalidTypeException(sent)}"
         )
