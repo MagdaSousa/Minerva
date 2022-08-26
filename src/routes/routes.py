@@ -11,6 +11,7 @@ from src.domains.models.period.period import Period
 from src.domains.actions.gross_domestic_product_action import GDPAction
 from src.domains.schemas.schemas import GDPCountryNameSchema, GDPFromRegion, GDPFromPeriod, \
     GDPResponseSchema, GrossRateResponseSchema, GrossRateByRegionSchema
+from src.ingestion.ingestion_old import execution_load_to_postgres
 from src.utils.utils import validating_user_input_data_type, validations_per_period
 
 obj_connection = DBConnection()
@@ -20,6 +21,11 @@ get_db = obj_connection.get_db
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(docs_url='/docs/Minerva')
+
+@app.post("/")
+def ingestion_data(db: Session = Depends(get_db)):
+    try:
+        execution_load_to_postgres()
 
 
 @app.get("/gdp/country/{item}")
