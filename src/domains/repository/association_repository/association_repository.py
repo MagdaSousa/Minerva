@@ -22,9 +22,17 @@ class AssociationRepository:
             raise logger.error(f"[AssociationRepository].[find_by_indicators_id]- ERROR- {err} ")
 
     @staticmethod
-    def exists_by_id(db: Session, id: int) -> bool:
+    def find_by_association_id(db: Session, id: int) -> Association.id:
         try:
-            return db.query(Association).filter(Association.countryID == id).first() is not None
-
+            country_id = db.query(Association.country_id).filter(Association.id == id).first()
+            return country_id
         except Exception as err:
-            raise logger.error(f"[AssociationRepository].[exists_by_id]- ERROR- {err} ")
+            raise logger.error(f"[AssociationRepository].[find_by_indicators_id]- ERROR- {err} ")
+
+    @staticmethod
+    def find_all(db: Session) -> list:
+        try:
+            associations = db.query(Association).all()
+            return associations
+        except Exception as err:
+            raise logger.error(f"[AssociationRepository].[find_by_indicators_id]- ERROR- {err} ")

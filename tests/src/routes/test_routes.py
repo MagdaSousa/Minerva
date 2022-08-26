@@ -6,8 +6,6 @@ client = TestClient(app)
 
 
 class TestApi:
-    def my_second_override(self):
-        return {"another": "override"}
 
     def test_gshould_return_a_json_with_the_data_of_the_queried_city_code(self, fastapi_dep, response_api):
         with fastapi_dep(app).override(
