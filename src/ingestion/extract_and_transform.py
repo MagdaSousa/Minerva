@@ -74,20 +74,6 @@ class ExtractAndTransformDataSet:
         except Exception as err:
             raise logger.error(f"[verify_shape] -ERROR- Verify  {err}")
 
-    def include_external_ids(self, country_code):
-        """
-        Recebe um country_code e cria um código externo de referencia para o atual,
-         que será usado para que as consultas sejam mais ágeis
-        :param country_code:
-        :return:
-        """
-        try:
-            list_ascii = [str(ord(x)) for x in country_code]
-            country_external_id = int("".join(list_ascii))
-            return country_external_id
-
-        except Exception as err:
-            raise logger.error(f"[verify_shape] -ERROR- Verify  {err}")
 
     def execute_trasform(self):
         try:

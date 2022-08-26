@@ -11,7 +11,7 @@ from src.domains.models.period.period import Period
 
 
 class IngestionInPostgres:
-    def __init__(self , df_merge,db:DBConnection):
+    def __init__(self, df_merge, db: DBConnection):
         self.df_merge = df_merge
         self.insert = insert
         self.db = db
@@ -55,7 +55,7 @@ class IngestionInPostgres:
     def ingestion_period_table_bach(self, pk):
 
         for column in list(self.df_merge.columns):
-            if column.isnumeric() and not None:
+            if column.isnumeric() :
                 self.db.insert_executor(Period, {"id": pk, "research_year": int(column)})
                 self.period_list[column] = pk
                 pk += 1
@@ -82,7 +82,10 @@ class IngestionInPostgres:
 
     def ingestion_gdp_table_bach(self, row, pk):
         for column in list(self.df_merge.columns):
-            if column.isnumeric() and not None:
+            if column.isnumeric() :
+                if str(row[column]) in ['nan', 'NAN']:
+                    row[column] = 0
+
                 self.db.insert_executor(GrossDomesticProduct, {
                     "value_per_period": row[column],
                     "association_id": pk,
