@@ -1,7 +1,7 @@
 import pytest
 from loguru import logger
 import pandas as pd
-from src.ingestion.ingestion import ExtractAndTransformDataSet
+from src.ingestion.ingestion_old import ExtractAndTransformDataSet
 
 url_gist_country = 'https://gist.githubusercontent.com/MagdaSousa/da6d007edfdf38019b0de219c4d18ad6/raw' \
                    '/a5f33797ec661a77d3587352f699dbb97b3487d8/API_NY_GDP_MKT_KD_ZG_DS2_en_csv_v2_4344066' \
