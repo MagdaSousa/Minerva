@@ -266,7 +266,7 @@ Neste caso não só retorna o código 200, ao finalizar o processo de ingestão 
 			}
 		]
 	}
-]
+]'
 
 ### Request
 ` "GET http://127.0.0.1:8000/api/gdp/rank/<PERIODO INICIAL> &<PERIODO FINAL> : Ranking dos 10 países (Nome e código) com maior e menor média de
