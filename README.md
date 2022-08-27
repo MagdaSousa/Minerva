@@ -11,12 +11,6 @@ E para os testes da api, utilizei:
 
 * [Insominia](https://insomnia.rest/download) 
 
-E como estou utilizando o FastApi e também disponibiliza, uma doc com base no Swagge, para que possamos testar fazendo as requisições, durante o passoa a passo mostrarei como utilizar..
-
-
-* [FAstAp iDocs](https://fastapi.tiangolo.com/tutorial/path-operation-configuration/?h=docs#description-from-docstring) 
-
-
 
 # Requisitos para rodar o projeto localmente:
 
@@ -76,29 +70,34 @@ Após rodar o comando docker, o banco será criado e a aplicação levantada, co
 Como citei anteriormente, vou mostrar como testar a plicação no Insominia e no Swagger que é disponibilizado pelo FastAPI
 
 
-tedtando via Insominia- Passo a passo: [repos] (https://github.com/MagdaSousa/Minerva/wiki/Modelagem)
+testando via Insominia- Passo a passo: [repos] (https://github.com/MagdaSousa/Minerva/wiki/Modelagem)
 
-edtando via Swagger - Passo a passo: [repos] (https://github.com/MagdaSousa/Minerva/wiki/Modelagem)
 
 
 
 
 
 # Estruturas Relevantes:
+![image](https://user-images.githubusercontent.com/55951781/187005050-3ecb8f4b-67d0-4b0b-a90f-a7446f60ce8d.png)
 
 Este projeto consiste em uma aplicação de backend, a qual não possui uma rota raiz (/) atualmente, possuindo apenas 3 estruturas de rotas, conforme a necessidade do usuário:
 
-• common: Referente aos dados de conta, gerais e individuais. E a partir do ID do usuário que será possível acessar o saldo da conta através das rotas (/accounts/balancce) e uma listagem de contas gerais (/accounts). Além disso, é possível se fazer nessa rota o login do usuário em questão (/accounts/login)
+• common:pasta que contém dados utilizados em várias partes do projeto
 
-• transfers: Rota responsável pelas ações de transfêrencia entre duas contas, só sendo permitido realizar as mesmas quando realizado previamente um login. Deverá obrigatoriamente enviar um token no header das requisições.
+• database: configurações do banco de dados
+
+* ingestion: Processo de inserção dos dados com pandas
+
+*domains: models, actions e outros arquivos responsáveis pelo fluxo
+
+
 
 # EndPoints
 
 
-## Accounts
 
 ### Request  
-` "POST" : Rota que faz a carga dos dados no postgre
+` "POST" : Rota que faz a carga dos dados no postgres
 
 ### Response  
 Neste caso não só retorna o código 200, ao finalizar o processo de ingestão dos dados
@@ -106,45 +105,102 @@ Neste caso não só retorna o código 200, ao finalizar o processo de ingestão 
 ]`
  
 ---
+'GET  http://127.0.0.1:8000/api/gdp/country/<nome ou code>:Todos os dados relacionados a um país informado (indicadores e descrição,
+    com exceção da coluna SpecialNotes). input: Nome ou código do país
+    
+    
+###Response
+'[
+	200,
+	{
+		"country_name": "Africa Eastern and Southern",
+		"country_code": "AFE",
+		"region_name": "inexistente",
+		"indicator_name": "GDP growth (annual %)",
+		"list_values_indicators": [
+			{
+				"1960": 0.0,
+				"1961": 0.24,
+				"1962": 7.98,
+				"1963": 5.16,
+				"1964": 4.58,
+				"1965": 5.33,
+				"1966": 3.91,
+				"1967": 5.26,
+				"1968": 4.02,
+				"1969": 5.28,
+				"1970": 4.7,
+				"1971": 5.37,
+				"1972": 2.15,
+				"1973": 4.44,
+				"1974": 5.89,
+				"1975": 1.73,
+				"1976": 2.85,
+				"1977": 1.23,
+				"1978": 1.03,
+				"1979": 2.8,
+				"1980": 5.42,
+				"1981": 4.33,
+				"1982": 0.51,
+				"1983": 0.15,
+				"1984": 3.01,
+				"1985": -0.45,
+				"1986": 2.29,
+				"1987": 4.23,
+				"1988": 4.0,
+				"1989": 2.9,
+				"1990": -0.04,
+				"1991": 0.11,
+				"1992": -1.98,
+				"1993": -0.39,
+				"1994": 2.03,
+				"1995": 4.29,
+				"1996": 5.44,
+				"1997": 4.42,
+				"1998": 1.85,
+				"1999": 2.64,
+				"2000": 3.35,
+				"2001": 3.66,
+				"2002": 3.89,
+				"2003": 3.08,
+				"2004": 5.51,
+				"2005": 6.12,
+				"2006": 6.55,
+				"2007": 6.6,
+				"2008": 4.34,
+				"2009": 0.76,
+				"2010": 5.15,
+				"2011": 3.68,
+				"2012": 0.92,
+				"2013": 4.2,
+				"2014": 3.98,
+				"2015": 2.95,
+				"2016": 2.22,
+				"2017": 2.56,
+				"2018": 2.49,
+				"2019": 2.03,
+				"2020": -2.89,
+				"2021": 4.3
+			}
+		]
+	}
+]'
+
 
 ### Request
-` "GET  http://127.0.0.1:8000/gdp/rate/<nome_pais>" : `
+` "GET http://127.0.0.1:8000/api/gdp/rate/country/<nome ou code>` :Taxa de crescimento do PIB por país. input: Nome ou código do país
+
+
+
 
 ### Response
-`  [
+[
 	200,
 	{
 		"country_name": "Aruba",
 		"country_code": "ABW",
 		"GDP growth annual %": [
 			{
-				"1960": "0 %",
-				"1961": "0 %",
-				"1962": "0 %",
-				"1963": "0 %",
-				"1964": "0 %",
-				"1965": "0 %",
-				"1966": "0 %",
-				"1967": "0 %",
-				"1968": "0 %",
-				"1969": "0 %",
-				"1970": "0 %",
-				"1971": "0 %",
-				"1972": "0 %",
-				"1973": "0 %",
-				"1974": "0 %",
-				"1975": "0 %",
-				"1976": "0 %",
-				"1977": "0 %",
-				"1978": "0 %",
-				"1979": "0 %",
-				"1980": "0 %",
-				"1981": "0 %",
-				"1982": "0 %",
-				"1983": "0 %",
-				"1984": "0 %",
-				"1985": "0 %",
-				"1986": "0 %",
 				"1987": "16 %",
 				"1988": "19 %",
 				"1989": "12 %",
@@ -179,97 +235,160 @@ Neste caso não só retorna o código 200, ao finalizar o processo de ingestão 
 				"2018": "1 %",
 				"2019": "-2 %",
 				"2020": "-22 %",
-				"2021": "0 %"
+				"2021": "0 %",
+				"1960": "0 %",
+				"1961": "0 %",
+				"1962": "0 %",
+				"1963": "0 %",
+				"1964": "0 %",
+				"1965": "0 %",
+				"1966": "0 %",
+				"1967": "0 %",
+				"1968": "0 %",
+				"1969": "0 %",
+				"1970": "0 %",
+				"1971": "0 %",
+				"1972": "0 %",
+				"1973": "0 %",
+				"1974": "0 %",
+				"1975": "0 %",
+				"1976": "0 %",
+				"1977": "0 %",
+				"1978": "0 %",
+				"1979": "0 %",
+				"1980": "0 %",
+				"1981": "0 %",
+				"1982": "0 %",
+				"1983": "0 %",
+				"1984": "0 %",
+				"1985": "0 %",
+				"1986": "0 %"
 			}
-		]`
-
-
+		]
+	}
+]
 
 ### Request
-` "GET [/account/balance](http://127.0.0.1:8000/gdp/rate/country/<codigo_ou_nome_do_pais>)" : Rota validar o saldo atual da conta, deve-se passar o token de acesso, recebido ao logar`
+` "GET http://127.0.0.1:8000/api/gdp/rank/<PERIODO INICIAL> &<PERIODO FINAL> : Ranking dos 10 países (Nome e código) com maior e menor média de
+    crescimento do PIB (GDP growth annual )
 
-- Header 
-`{
-	Authorization: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MzQ4OTI0NzIsImlzcyI6InZpdG9yaW5vIiwiVXNlcl9pZCI6MX0.dlyrFzbfBz7QPBQOaq9c1_gCVmv2JcjkI0SGWZ6ZsVU"
-}`
 
 
 ### Response
-`{
-  "balance": 10.00
-}`
-
-### Request
-` "POST /account/login" : Rota para realizar o login na conta`
-
-- Body (JSON)
-`{
-	"cpf": "57857751099",
-	"secret":"12345"
-}`
-
-### Response
-`{
-	"authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOiJjMDM2NDc1Zi1iN2EwLTRmMzQtOGYxZi1jNDM1MTVkMzE3MjQifQ.Vzl8gI6gYbDMTDPhq878f_Wq_b8J0xz81do8XmHeIFI"
-}`
-
-## Transfer
-
-### Request
-` "GET /transfers" : Rota para retornar os dados de todas as transfêrencias (recebidas ou realizadas) do usuário`
-
-- Header 
-`{
-	Authorization: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MzQ4OTI0NzIsImlzcyI6InZpdG9yaW5vIiwiVXNlcl9pZCI6MX0.dlyrFzbfBz7QPBQOaq9c1_gCVmv2JcjkI0SGWZ6ZsVU"
-}`
-
-### Response  
-`[
+	200,
 	{
-		"id": "5ccbb3f0-9351-45c2-80cb-cfffbee767c2",
-		"account_origin_id": "c036475f-b7a0-4f34-8f1f-c43515d31724",
-		"account_destiny_id": "4cc7fe98-9996-408c-bff7-06cee3e6c519",
-		"value": 0.01,
-		"created_at": "2022-01-10T11:46:37Z"
-	},
-  	{
-		"id": "5ccbb3f0-9351-45c2-80cb-cfffbee767c2",
-		"account_origin_id": "c036475f-b7a0-4f34-8f1f-c43515d31724",
-		"account_destiny_id": "4cc7fe98-9996-408c-bff7-06cee3e6c519",
-		"value": 0.01,
-		"created_at": "2022-01-10T11:46:37Z"
+		"highest average": {
+			"Country_name": {
+				"144": "Iraq",
+				"193": "Eswatini",
+				"10": "Turkmenistan",
+				"166": "United Arab Emirates",
+				"122": "Belize",
+				"254": "Thailand",
+				"264": "Lao PDR",
+				"190": "Singapore",
+				"194": "Botswana",
+				"32": "Iran, Islamic Rep."
+			},
+			"avarage": {
+				"144": 27.349646564987324,
+				"193": 16.964552304477202,
+				"10": 15.56461930077464,
+				"166": 15.33293840795025,
+				"122": 12.2263049294711,
+				"254": 11.6788347156201,
+				"264": 10.44760765995747,
+				"190": 9.989864098053335,
+				"194": 9.916113918230526,
+				"32": 9.863521060382025
+			}
+		}
 	}
 ]`
 
----
+
 
 ### Request
-` "POST /transfer" : Cria uma nova transfêrencia do usuário informado no token, para o destinatário.`
+` "GET http://127.0.0.1:8000/api/gdp/region/<NOME DA REGIAO>' : Consulta do PIB dos países por região (ordem alfabética). input: Região
 
-- Header 
-`{
-	Authorization: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MzQ4OTI0NzIsImlzcyI6InZpdG9yaW5vIiwiVXNlcl9pZCI6MX0.dlyrFzbfBz7QPBQOaq9c1_gCVmv2JcjkI0SGWZ6ZsVU"
-}`
 
-- Body (JSON):
-`{
-	"account_destiny_id":"4cc7fe98-9996-408c-bff7-06cee3e6c519",
-	"amount":1
-}`
+### Response  
+`[
+	200,
+	{
+		"Region": "Latin America & Caribbean",
+		"Honduras": {
+			"GDP growth annual %": [
+				{
+					"1960": "0 %",
+					"1961": "2 %",
+					"1962": "6 %",
+					"1963": "4 %",
+					"1964": "5 %",
+					"1965": "9 %",
+					"1966": "5 %",
+					"1967": "6 %",
+					"1968": "7 %",
+					"1969": "1 %",
+					"1970": "4 %",
+					"1971": "4 %",
+					"1972": "6 %",
+					"1973": "8 %",
+					"1974": "-1 %",
+					"1975": "2 %",
+					"1976": "10 %",
+					"1977": "10 %",
+					"1978": "6 %",
+					"1979": "6 %",
+					"1980": "1 %",
+					"1981": "-1 %",
+					"1982": "-2 %",
+					"1983": "1 %",
+					"1984": "6 %",
+					"1985": "6 %",
+					"1986": "5 %",
+					"1987": "7 %",
+					"1988": "2 %",
+					"1989": "3 %",
+					"1990": "3 %",
+					"1991": "-3 %",
+					"1992": "6 %",
+					"1993": "6 %",
+					"1994": "0 %",
+					"1995": "6 %",
+					"1996": "2 %",
+					"1997": "5 %",
+					"1998": "4 %",
+					"1999": "-1 %",
+					"2000": "7 %",
+					"2001": "3 %",
+					"2002": "4 %",
+					"2003": "5 %",
+					"2004": "6 %",
+					"2005": "6 %",
+					"2006": "7 %",
+					"2007": "6 %",
+					"2008": "4 %",
+					"2009": "-2 %",
+					"2010": "4 %",
+					"2011": "4 %",
+					"2012": "4 %",
+					"2013": "3 %",
+					"2014": "3 %",
+					"2015": "4 %",
+					"2016": "4 %",
+					"2017": "5 %",
+					"2018": "4 %",
+					"2019": "3 %",
+					"2020": "-9 %",
+					"2021": "13 %"
+				}
+			]
+		},`
 
-### Response
+---
 
-`{
-	"id": "5ccbb3f0-9351-45c2-80cb-cfffbee767c2",
-	"account_origin_name": "c036475f-b7a0-4f34-8f1f-c43515d31724",
-	"account_destiny_name": "4cc7fe98-9996-408c-bff7-06cee3e6c519",
-	"value": 0.01,
-	"created_at": "2022-01-10T11:46:37Z"
-}`
 
-# Inforamações adicionais:
-
-Ao rodar o docker, os dados dos arquivos csv, já serão inseridos automaticamente
 
 ## Documentação do projeto:
 - Estrutura do repositório : [repos] (https://github.com/MagdaSousa/Minerva/wiki/Estrutura-do-Reposit%C3%B3rio)
