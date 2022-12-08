@@ -9,8 +9,7 @@ from src.domains.models.country.region import Region
 from src.domains.models.country.country import Country
 from src.domains.models.period.period import Period
 from src.domains.actions.gross_domestic_product_action import GDPAction
-from src.domains.schemas.schemas import GDPCountryNameSchema, GDPFromRegion, GDPFromPeriod, \
-    GDPResponseSchema, GrossRateResponseSchema, GrossRateByRegionSchema,  PeriodRangeMedianSchema
+from src.domains.schemas.schemas import GDPResponseSchema, GrossRateResponseSchema, GrossRateByRegionSchema, PeriodRangeMeanSchema
 from src.ingestion.start import execution_load_to_postgres
 from src.utils.utils import validating_user_input_data_type, validations_per_period
 
@@ -35,7 +34,7 @@ def ingestion_data():
     return status.HTTP_200_OK
 
 
-@app.get("/gdp/country/{item}")
+@app.get("/api/gdp/country/{item}")
 def get_by_country_name(item: str, db: Session = Depends(get_db)):
     """ Todos os dados relacionados a um país informado (indicadores e descrição,
     com exceção da coluna SpecialNotes). input: Nome ou código do país"""
@@ -50,7 +49,7 @@ def get_by_country_name(item: str, db: Session = Depends(get_db)):
     return status.HTTP_200_OK, GDPResponseSchema(gdp).assemble_the_schematic_for_the_indicator()
 
 
-@app.get("/gdp/rate/country/{item}")
+@app.get("/api/gdp/rate/country/{item}")
 def get_growth_rate(item: str, db: Session = Depends(get_db)):
     """Taxa de crescimento do PIB por país. input: Nome ou código do país"""
     validating_user_input_data_type(sent=item, expected=str)
@@ -64,7 +63,7 @@ def get_growth_rate(item: str, db: Session = Depends(get_db)):
     return status.HTTP_200_OK, GrossRateResponseSchema(gdp).formatting_growth_rate_data_by_country()
 
 
-@app.get("/gdp/region/{item}")
+@app.get("/api/gdp/region/{item}")
 def get_gdp_by_region(item: str, db: Session = Depends(get_db)):
     """ Consulta do PIB dos países por região (ordem alfabética). input: Região"""
 
@@ -79,10 +78,8 @@ def get_gdp_by_region(item: str, db: Session = Depends(get_db)):
     return status.HTTP_200_OK, GrossRateByRegionSchema(gdp).formatting_growth_rate_data_by_country()
 
 
-
-
-@app.get("/gdp/rank/{intial_period}&{final_period}")
-def get_by_period(intial_period: int, final_period: int,db: Session = Depends(get_db)):
+@app.get("/api/gdp/rank/{intial_period}&{final_period}")
+def get_by_period(intial_period: int, final_period: int, db: Session = Depends(get_db)):
     """Ranking dos 10 países (Nome e código) com maior e menor média de
     crescimento do PIB (GDP growth annual ) com o período sendo fornecido
     como parâmetro na API."""
@@ -95,5 +92,4 @@ def get_by_period(intial_period: int, final_period: int,db: Session = Depends(ge
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="requested period not found"
         )
-    return status.HTTP_200_OK, PeriodRangeMedianSchema(gdp).calculate_the_average_GDP_rate_by_country()
-
+    return status.HTTP_200_OK, PeriodRangeMeanSchema(gdp).calculate_the_average_GDP_rate_by_country()
